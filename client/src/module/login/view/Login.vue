@@ -6,18 +6,20 @@
           <v-card-text>
             <v-form @submit.prevent="login">
               <v-text-field
-                v-model="email"
+                v-model="form.email"
                 label="Email"
                 required
               ></v-text-field>
               <v-text-field
-                v-model="password"
-                label="Senha"
-                type="password"
+                v-model="form.password"
+                label="Password"
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPassword ? 'text' : 'password'"
                 required
+                @click:append="togglePasswordVisibility()"
               ></v-text-field>
               <v-btn class="login-button" color="primary" type="submit"
-                >Entrar</v-btn
+                >Sign in</v-btn
               >
             </v-form>
           </v-card-text>
@@ -27,18 +29,25 @@
   </v-container>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: "LoginView",
   data() {
     return {
-      email: "",
-      password: "",
+      form: {
+        email: "",
+        password: "",
+      },
+      showPassword: false,
     };
   },
   methods: {
     login() {
-      // Lógica de autenticação aqui.
+      const { email, password } = this.form;
+      // Chame sua lógica de autenticação aqui, passando email e password
+    },
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
     },
   },
 };

@@ -7,7 +7,7 @@
   </v-row>
 </template>
 
-<script>
+<script lang="ts">
 import { usuarioController } from "../../di/di";
 import UserForm from "../components/UserForm.vue";
 import UserTable from "../components/UserTable.vue";
