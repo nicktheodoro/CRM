@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyApp.Core.Users.Commands;
 using MyApp.Core.Users.Queries;
@@ -25,12 +26,14 @@ namespace MyApp.Application.Controllers
         }
 
         [HttpPatch("inactive")]
+        [Authorize]
         public async Task<IActionResult> InactiveUser(InactiveUserCommand request)
         {
             return await Result(request, HttpStatusCode.OK);
         }
 
         [HttpPatch("update-password")]
+        [Authorize]
         public async Task<IActionResult> UpdatePassword(UpdateUserPassword request)
         {
             return await Result(request, HttpStatusCode.OK);

@@ -1,20 +1,24 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text.Json;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using MySql.Data.MySqlClient;
 using SharedDomain;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text.Json;
 
 namespace CRM.Application.Common;
 
 public class TokenService : ITokenService
 {
-    private readonly IOptions<TokenConfiguration> _configuration;
+    private readonly TokenConfiguration _tokenConfiguration;
 
-    public TokenService(IOptions<TokenConfiguration> configuration)
+    private readonly string _connectionString;
+
+    public TokenService(IConfiguration configuration, IOptions<TokenConfiguration> tokenConfiguration)
     {
-        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        _tokenConfiguration = tokenConfiguration.Value;
+        _connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new ArgumentNullException(nameof(_connectionString));
     }
 
     public AccessToken GenerateToken(UserRequest user)
@@ -27,11 +31,11 @@ public class TokenService : ITokenService
                 new Claim(ClaimTypes.NameIdentifier, user.ID),
                 new Claim("Name", user.Name),
                 new Claim("Email", user.Email),
-                new Claim("MachineName", Environment.MachineName)
+                new Claim("IpAddress", user.IpAddress)
             }),
-            Expires = DateTime.UtcNow.AddHours(_configuration.Value.ExpiresIn),
+            Expires = DateTime.UtcNow.AddHours(_tokenConfiguration.ExpiresIn),
             SigningCredentials = new SigningCredentials(
-                new SymmetricSecurityKey(_configuration.Value.GetSecretAsByteArray()),
+                new SymmetricSecurityKey(_tokenConfiguration.GetSecretAsByteArray()),
                 SecurityAlgorithms.HmacSha256Signature
             )
         };
@@ -52,7 +56,7 @@ public class TokenService : ITokenService
         var tokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(_configuration.Value.GetSecretAsByteArray()),
+            IssuerSigningKey = new SymmetricSecurityKey(_tokenConfiguration.GetSecretAsByteArray()),
             ValidateIssuer = false,
             ValidateAudience = false,
             ValidateLifetime = false
@@ -87,13 +91,13 @@ public class TokenService : ITokenService
             CreationDate = DateTime.UtcNow
         };
 
-        return TripleDes.Encrypt(_configuration.Value.GetSecretAsByteArray(), JsonSerializer.Serialize(refreshInfo));
+        return TripleDes.Encrypt(_tokenConfiguration.GetSecretAsByteArray(), JsonSerializer.Serialize(refreshInfo));
     }
 
     public bool ValidateRefreshToken(string refreshToken, UserRequest user)
     {
         var refreshInfo = JsonSerializer.Deserialize<RefreshTokenInfo>(
-            TripleDes.Decrypt(_configuration.Value.GetSecretAsByteArray(), refreshToken)
+            TripleDes.Decrypt(_tokenConfiguration.GetSecretAsByteArray(), refreshToken)
         );
 
         return refreshInfo.ID.ToUpper().Equals(user.ID.ToUpper()) &&
@@ -104,13 +108,13 @@ public class TokenService : ITokenService
     public bool IsRefreshTokenExpired(string refreshToken)
     {
         var refreshInfo = JsonSerializer.Deserialize<RefreshTokenInfo>(
-            TripleDes.Decrypt(_configuration.Value.GetSecretAsByteArray(), refreshToken)
+            TripleDes.Decrypt(_tokenConfiguration.GetSecretAsByteArray(), refreshToken)
         );
 
-        return refreshInfo.CreationDate.AddHours(_configuration.Value.ExpiresIn * 2) < DateTime.UtcNow;
+        return refreshInfo.CreationDate.AddHours(_tokenConfiguration.ExpiresIn * 2) < DateTime.UtcNow;
     }
 
-    public static async Task<UserRequest> GetDatabaseUser(AuthRequest request, string ip, string? conectionString)
+    public async Task<UserRequest> GetDatabaseUser(AuthRequest request, string ip)
     {
         var sql = "SELECT id, name, email, passwordHash FROM users WHERE email = @email";
 
@@ -119,26 +123,33 @@ public class TokenService : ITokenService
         var Email = string.Empty;
         var PasswordHash = string.Empty;
 
-        using (var connection = new SqlConnection(conectionString))
+        using (var connection = new MySqlConnection(_connectionString))
         {
             connection.Open();
-            var command = new SqlCommand(sql, connection);
-            command.Parameters.AddWithValue("@email", request.Email.ToLower());
 
-            using SqlDataReader reader = await command.ExecuteReaderAsync();
-            if (reader.Read())
+            var command = connection.CreateCommand();
+            command.CommandText = sql;
+            command.Parameters.AddWithValue("@email", request.Email.ToLower());
             {
-                ID = reader.GetString(0);
-                Name = reader.GetString(1);
-                Email = reader.GetString(2);
-                PasswordHash = reader.GetString(3);
+                var reader = await command.ExecuteReaderAsync();
+
+                if (reader.Read())
+                {
+                    ID = reader.GetString(0);
+                    Name = reader.GetString(1);
+                    Email = reader.GetString(2);
+                    PasswordHash = reader.GetString(3);
+                }
             }
         }
 
-        if (string.IsNullOrEmpty(Email) || BCrypt.Net.BCrypt.Verify(request.Password, PasswordHash))
+        if (string.IsNullOrEmpty(Email) || !BCrypt.Net.BCrypt.Verify(request.Password, PasswordHash))
+        {
             return new UserRequest();
+        }
 
-        return new UserRequest(ID, PasswordHash, Name, ip);
+        return new UserRequest(ID, Name, Email, ip);
     }
 }
+
 

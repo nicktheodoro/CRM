@@ -1,26 +1,23 @@
 ﻿using CRM.Application.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SharedDomain.Extensions;
 
-namespace MyApp.Application.Controllers;
-
-public class AuthController
+namespace CRM.Application.Controllers
 {
     [ApiController]
     [Route("/api/auth")]
-    public class AutenticacaoController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly ITokenService _tokenService;
-        private readonly IConfiguration _configuration;
 
-        public AutenticacaoController(ITokenService tokenService, IConfiguration configuration)
+        public AuthController(ITokenService tokenService)
         {
             _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
-            _configuration = configuration;
         }
 
-        /// <summary>Teste de disponibilidade da API</summary>
-        /// <remarks>Neste endpoint é possível verificar se a API está disponível.</remarks>
+        /// <summary>API Availability Test</summary>
+        /// <remarks>This endpoint allows checking if the API is available.</remarks>
         /// <returns></returns>
         /// <response code="200">pong</response>
         [HttpGet("ping")]
@@ -30,25 +27,25 @@ public class AuthController
             return "pong";
         }
 
-        /// <summary>Requisição do token de acesso</summary>
-        /// <remarks>Neste endpoint é possível solicitar o token de acesso à API.</remarks>
+        /// <summary>Request Access Token</summary>
+        /// <remarks>This endpoint allows requesting an access token for the API.</remarks>
         /// <param name="request"></param>
         /// <returns></returns>
         /// <response code="200">{ "accessToken", "refreshToken", "expiresIn", "tokenType" }</response>
-        /// <response code="400">{ "mensagem": "Usuário ou senha inválidos" }</response>
+        /// <response code="400">{ "message": "Invalid username or password" }</response>
         [HttpPost("token")]
         [AllowAnonymous]
-        public async Task<ActionResult<dynamic>> Autenticar([FromForm] AuthRequest request)
+        public async Task<ActionResult<dynamic>> Authenticate([FromForm] AuthRequest request)
         {
-            var ipUsuario = "126.0.0.68";
+            var user = await _tokenService.GetDatabaseUser(request, Request.GetRequestIP());
 
-            var usuario = await TokenService.GetDatabaseUser(request, ipUsuario, _configuration.GetConnectionString("DefaultConnection"));
+            if (string.IsNullOrEmpty(user.ID))
+            {
+                return BadRequest(new { message = "Invalid username or password" });
+            }
 
-            if (string.IsNullOrEmpty(usuario.ID))
-                return BadRequest(new { mensagem = "Usuário ou senha inválidos" });
-
-            var accessToken = _tokenService.GenerateToken(usuario);
-            var refreshToken = _tokenService.GenerateRefreshToken(usuario);
+            var accessToken = _tokenService.GenerateToken(user);
+            var refreshToken = _tokenService.GenerateRefreshToken(user);
 
             return new TokenResponse()
             {
@@ -58,53 +55,53 @@ public class AuthController
             };
         }
 
-        /// <summary>Verificação da validade do token de acesso</summary>
-        /// <remarks>Neste endpoint é possível verificar se o token de acesso ainda é válido.</remarks>                       
+        /// <summary>Check Access Token Validity</summary>
+        /// <remarks>This endpoint allows checking if the access token is still valid.</remarks>                       
         /// <returns></returns>
-        /// <response code="200">{ mensagem = "Token válido" }</response>
+        /// <response code="200">{ message = "Token is valid" }</response>
         /// <response code="401"></response>
         [HttpGet("validate")]
         [Authorize]
-        public IActionResult ValidarToken()
+        public IActionResult ValidateToken()
         {
-            return Ok(new { mensagem = "Token válido" });
+            return Ok(new { message = "Token is valid" });
         }
 
-        /// <summary>Logout do usuário</summary>
-        /// <remarks>Neste endpoint é possível efetuar a desconexão do usuário.</remarks>
+        /// <summary>User Logout</summary>
+        /// <remarks>This endpoint allows user logout.</remarks>
         /// <returns></returns>
-        /// <response code="200">{ mensagem = "Usuario desconectado!" }</response>
+        /// <response code="200">{ message = "User logged out!" }</response>
         [HttpDelete("logout")]
         [AllowAnonymous]
         public IActionResult Logout()
         {
-            return Ok(new { mensagem = "Usuario desconectado!" });
+            return Ok(new { message = "User logged out!" });
         }
 
-        /// <summary>Atualização do Token de acesso</summary>
-        /// <remarks>Neste endpoint é possível solicitar a atualização do token de acesso à API.</remarks>
+        /// <summary>Refresh Access Token</summary>
+        /// <remarks>This endpoint allows requesting the refresh of an access token for the API.</remarks>
         /// <param name="request"></param>
         /// <returns></returns>
         /// <response code="200">{ "accessToken", "refreshToken", "expiresIn", "tokenType" }</response>
-        /// <response code="400">{ "mensagem": "Usuário ou refreshToken inválidos" }</response>
+        /// <response code="400">{ "message": "Invalid user or refreshToken" }</response>
         [HttpPost("refresh-token")]
         [AllowAnonymous]
-        public ActionResult<dynamic> Atualizar([FromForm] RefreshTokenRequest request)
+        public ActionResult<dynamic> Refresh([FromForm] RefreshTokenRequest request)
         {
-            var usuario = _tokenService.GetUserFromToken(request.Token);
+            var user = _tokenService.GetUserFromToken(request.Token);
 
-            if (!usuario.Email.ToUpper().Equals(request.Email.ToUpper()) || !_tokenService.ValidateRefreshToken(request.RefreshToken, usuario))
+            if (!user.Email.ToUpper().Equals(request.Email.ToUpper()) || !_tokenService.ValidateRefreshToken(request.RefreshToken, user))
             {
-                return BadRequest(new { mensagem = "Usuário ou refreshToken inválidos" });
+                return BadRequest(new { message = "Invalid user or refreshToken" });
             }
 
             if (_tokenService.IsRefreshTokenExpired(request.RefreshToken))
             {
-                return BadRequest(new { mensagem = "RefreshToken expirado" });
+                return BadRequest(new { message = "RefreshToken expired" });
             }
 
-            var accessToken = _tokenService.GenerateToken(usuario);
-            var refreshToken = _tokenService.GenerateRefreshToken(usuario);
+            var accessToken = _tokenService.GenerateToken(user);
+            var refreshToken = _tokenService.GenerateRefreshToken(user);
 
             return new TokenResponse()
             {
