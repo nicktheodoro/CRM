@@ -7,6 +7,10 @@ import { createUserUseCase } from "../atendimento/domain/useCase/createUserUseCa
 
 import { UserController } from "../atendimento/controller/UserController";
 
+import { authenticateRepository } from "../login/repository/authenticateRepository";
+import { authenticateUseCase } from "../login/domain/useCase/authenticateUseCase";
+import { AuthenticateController } from "../login/controller/AuthController";
+
 // axios.defaults.headers.common["Accept"] = "*/*";
 axios.defaults.headers.common["Content-Type"] =
   "application/json;charset=UTF-8";
@@ -27,14 +31,26 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-// Implementation methods from atendimentos feature
-const fetchUsersRepositoryImpl = fetchUsersRepository(axiosInstance);
-const fetchUsersUseCaseImpl = fetchUsersUseCase(fetchUsersRepositoryImpl);
+const authenticateController = (context: any) => {
+  const authenticateRepositoryImpl = authenticateRepository(axiosInstance);
+  const authenticateUseCaseImpl = authenticateUseCase(
+    authenticateRepositoryImpl
+  );
 
-const createUserRepositoryImpl = createUserRepository(axiosInstance);
-const createUserUseCaseImpl = createUserUseCase(createUserRepositoryImpl);
+  return new AuthenticateController(context, authenticateUseCaseImpl);
+};
 
-const usuarioController = (context: any) =>
-  new UserController(context, fetchUsersUseCaseImpl, createUserUseCaseImpl);
+const usuarioController = (context: any) => {
+  const fetchUsersRepositoryImpl = fetchUsersRepository(axiosInstance);
+  const fetchUsersUseCaseImpl = fetchUsersUseCase(fetchUsersRepositoryImpl);
+  const createUserRepositoryImpl = createUserRepository(axiosInstance);
+  const createUserUseCaseImpl = createUserUseCase(createUserRepositoryImpl);
 
-export { usuarioController };
+  return new UserController(
+    context,
+    fetchUsersUseCaseImpl,
+    createUserUseCaseImpl
+  );
+};
+
+export { authenticateController, usuarioController };

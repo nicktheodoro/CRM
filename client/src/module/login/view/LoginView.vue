@@ -4,19 +4,21 @@
       <v-flex xs12 sm8 md4>
         <v-card class="card-container">
           <v-card-text>
-            <v-form @submit.prevent="login">
+            <v-form @submit.prevent="controller.signIn()">
               <v-text-field
-                v-model="form.email"
+                v-model="controller.form.email"
                 label="Email"
                 required
               ></v-text-field>
               <v-text-field
-                v-model="form.password"
+                v-model="controller.form.password"
                 label="Password"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPassword ? 'text' : 'password'"
+                :append-icon="
+                  controller.showPassword ? 'mdi-eye' : 'mdi-eye-off'
+                "
+                :type="controller.showPassword ? 'text' : 'password'"
                 required
-                @click:append="togglePasswordVisibility()"
+                @click:append="controller.togglePasswordVisibility()"
               ></v-text-field>
               <v-btn class="login-button" color="primary" type="submit"
                 >Sign in</v-btn
@@ -30,26 +32,13 @@
 </template>
 
 <script lang="ts">
+import { authenticateController } from "../../di/di";
+
 export default {
   name: "LoginView",
-  data() {
-    return {
-      form: {
-        email: "",
-        password: "",
-      },
-      showPassword: false,
-    };
-  },
-  methods: {
-    login() {
-      const { email, password } = this.form;
-      // Chame sua lógica de autenticação aqui, passando email e password
-    },
-    togglePasswordVisibility() {
-      this.showPassword = !this.showPassword;
-    },
-  },
+  data: (context: any) => ({
+    controller: authenticateController(context),
+  }),
 };
 </script>
 

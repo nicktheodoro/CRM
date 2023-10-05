@@ -18,7 +18,7 @@ export default {
     UserForm,
     UserTable,
   },
-  data: (context) => ({
+  data: (context: any) => ({
     controller: usuarioController(context),
   }),
 };

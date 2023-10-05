@@ -14,21 +14,21 @@
             dense
             filled
             v-model="controller.user.name"
-            :rules="[(v) => !!v || 'Required']"
+            :rules="[(v: string) => !!v || 'Required']"
           />
           <v-text-field
             label="Email"
             dense
             filled
             v-model="controller.user.email"
-            :rules="[(v) => !!v || 'Required']"
+            :rules="[(v: string) => !!v || 'Required']"
           />
           <v-text-field
             label="Password"
             dense
             filled
             v-model="controller.user.password"
-            :rules="[(v) => !!v || 'Required']"
+            :rules="[(v: string) => !!v || 'Required']"
           />
         </v-form>
       </v-card-text>
@@ -43,7 +43,7 @@
   </v-dialog>
 </template>
 
-<script>
+<script lang="ts">
 import { UserController } from "@/module/atendimento/controller/UserController";
 
 export default {
