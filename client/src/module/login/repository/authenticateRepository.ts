@@ -19,7 +19,18 @@ interface AuthenticateRepository {
 const authenticateRepository =
   (axios: AxiosInstance): AuthenticateRepository =>
   async (auth: AuthenticateRequest) => {
-    return await axios.post("/auth/token", auth);
+    const formData = new FormData();
+
+    if (auth.email) formData.append("email", auth.email);
+    if (auth.password) formData.append("password", auth.password);
+
+    const response = await axios.post("/auth/token", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
   };
 
 export { authenticateRepository, AuthenticateRepository };

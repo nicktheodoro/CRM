@@ -1,3 +1,4 @@
+import { Store } from "vuex";
 import { AuthenticateUseCase } from "../domain/useCase/authenticateUseCase";
 
 interface AuthenticateRequest {
@@ -14,13 +15,21 @@ class AuthenticateController {
 
   constructor(
     private context: any,
+    private store: Store<any>,
     private authenticateUseCase: AuthenticateUseCase
-  ) {
-    console.log(authenticateUseCase)
-  }
+  ) {}
 
   async signIn() {
-    await this.authenticateUseCase(this.form);
+    await this.store.dispatch(
+      "authenticate",
+      this.authenticateUseCase(this.form)
+    );
+      
+    if (this.store.state.isAuthenticated) {
+      this.context.$router.push("/dashboard");
+    } else {
+      alert("Email ou senha incorretos.")
+    }
   }
 
   togglePasswordVisibility() {

@@ -1,52 +1,37 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-  <v-dialog persistent width="400" v-model="controller.formDialog">
-    <v-card>
-      <v-card-title class="pa-0 pb-4">
-        <v-toolbar flat dense color="primary" class="white--text">
-          New product
-        </v-toolbar>
-      </v-card-title>
-      <v-card-text>
-        <v-form @submit.prevent ref="form">
-          <v-text-field
-            label="Name"
-            dense
-            filled
-            v-model="controller.user.name"
-            :rules="[(v: string) => !!v || 'Required']"
-          />
-          <v-text-field
-            label="Email"
-            dense
-            filled
-            v-model="controller.user.email"
-            :rules="[(v: string) => !!v || 'Required']"
-          />
-          <v-text-field
-            label="Password"
-            dense
-            filled
-            v-model="controller.user.password"
-            :rules="[(v: string) => !!v || 'Required']"
-          />
-        </v-form>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn @click="controller.cancel()" color="red" text>cancel</v-btn>
-        <v-spacer></v-spacer>
-        <v-btn color="primary" @click="controller.save()">
-          <v-icon left>mdi-content-save</v-icon>save
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <v-card tile elevation="2">
+    <v-card-title>
+      <h1>New user</h1>
+    </v-card-title>
+    <v-card-text>
+      <v-form @submit.prevent="controller.signUp()" ref="form">
+        <v-text-field
+          label="Name"
+          v-model="controller.user.name"
+          :rules="[(v) => !!v || 'Required']"
+        />
+        <v-text-field
+          label="Email"
+          v-model="controller.user.email"
+          :rules="[(v) => !!v || 'Required']"
+        />
+        <v-text-field
+          label="Password"
+          v-model="controller.user.password"
+          :rules="[(v) => !!v || 'Required']"
+        />
+        <v-btn color="primary" type="submit">Sign in</v-btn>
+      </v-form>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts">
 import { UserController } from "@/module/atendimento/controller/UserController";
 
 export default {
+  name: "UserForm",
   props: {
     controller: {
       type: UserController,

@@ -4,16 +4,16 @@ interface UserI {
   id?: string | null;
   name?: string | null;
   email?: string | null;
+  password?: string | null;
   isActive?: boolean | null;
-  password?: boolean | null;
 }
 
 class UserModel {
   id?: string | null;
   name?: string | null;
   email?: string | null;
+  password?: string | null;
   isActive?: boolean | null;
-  password?: boolean | null;
 
   constructor(data: UserI) {
     this.id = data.id ?? null;

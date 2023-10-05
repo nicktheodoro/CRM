@@ -1,21 +1,21 @@
 import axios from "axios";
 
+import store from "@/store";
+
 import { fetchUsersRepository } from "../atendimento/repository/fetchUsersRepository";
 import { fetchUsersUseCase } from "../atendimento/domain/useCase/fetchUsersUseCase";
 import { createUserRepository } from "../atendimento/repository/createUserRepository";
 import { createUserUseCase } from "../atendimento/domain/useCase/createUserUseCase";
-
 import { UserController } from "../atendimento/controller/UserController";
 
 import { authenticateRepository } from "../login/repository/authenticateRepository";
 import { authenticateUseCase } from "../login/domain/useCase/authenticateUseCase";
 import { AuthenticateController } from "../login/controller/AuthController";
 
-// axios.defaults.headers.common["Accept"] = "*/*";
+axios.defaults.headers.common["Accept"] = "*/*";
 axios.defaults.headers.common["Content-Type"] =
   "application/json;charset=UTF-8";
 axios.defaults.baseURL = "https://localhost:7213/api";
-
 const axiosInstance = axios.create();
 
 axiosInstance.interceptors.response.use(
@@ -37,7 +37,7 @@ const authenticateController = (context: any) => {
     authenticateRepositoryImpl
   );
 
-  return new AuthenticateController(context, authenticateUseCaseImpl);
+  return new AuthenticateController(context, store, authenticateUseCaseImpl);
 };
 
 const usuarioController = (context: any) => {
@@ -46,10 +46,17 @@ const usuarioController = (context: any) => {
   const createUserRepositoryImpl = createUserRepository(axiosInstance);
   const createUserUseCaseImpl = createUserUseCase(createUserRepositoryImpl);
 
+  const authenticateRepositoryImpl = authenticateRepository(axiosInstance);
+  const authenticateUseCaseImpl = authenticateUseCase(
+    authenticateRepositoryImpl
+  );
+
   return new UserController(
     context,
+    store,
     fetchUsersUseCaseImpl,
-    createUserUseCaseImpl
+    createUserUseCaseImpl,
+    authenticateUseCaseImpl
   );
 };
 

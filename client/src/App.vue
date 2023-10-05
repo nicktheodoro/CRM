@@ -1,22 +1,17 @@
 <template>
-  <v-app>
-    <v-main>
-      <v-container fill-height>
-        <LoginView />
-      </v-container>
+  <v-app id="app">
+    <v-main id="container">
+      <v-layout fluid fill-height align-center justify-center>
+        <router-view />
+      </v-layout>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import LoginView from "./module/login/view/LoginView.vue";
 
 export default Vue.extend({
   name: "App",
-
-  components: {
-    LoginView,
-  },
 });
 </script>
