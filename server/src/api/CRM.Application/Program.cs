@@ -8,7 +8,6 @@ using MyApp.Core.Users.Handlers;
 using MyApp.Core.Users.Interfaces;
 using MyApp.Core.Users.Mappers;
 using MyApp.Core.Users.Services;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +18,8 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => {
+builder.Services.AddSwaggerGen(c =>
+{
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -65,7 +65,7 @@ builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(UserHandl
 builder.Services.AddAutoMapper(typeof(UserMap));
 
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<UserContext>(options => options.UseMySql(connection, ServerVersion.AutoDetect(connection)));
+builder.Services.AddDbContext<UserContext>(options => options.UseNpgsql(connection));
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<UserService>();

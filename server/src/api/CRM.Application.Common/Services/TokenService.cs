@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using MySql.Data.MySqlClient;
+using Npgsql;
 using SharedDomain;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -123,7 +123,7 @@ public class TokenService : ITokenService
         var Email = string.Empty;
         var PasswordHash = string.Empty;
 
-        using (var connection = new MySqlConnection(_connectionString))
+        using (var connection = new NpgsqlConnection(_connectionString))
         {
             connection.Open();
 
