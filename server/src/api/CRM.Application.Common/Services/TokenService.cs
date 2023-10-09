@@ -116,7 +116,7 @@ public class TokenService : ITokenService
 
     public async Task<UserRequest> GetDatabaseUser(AuthRequest request, string ip)
     {
-        var sql = "SELECT id, name, email, passwordHash FROM users WHERE email = @email";
+        var sql = "SELECT \"Id\", \"Name\", \"Email\", \"PasswordHash\" FROM public.\"Users\" WHERE \"Email\" = @email AND \"IsActive\" = true";
 
         var ID = string.Empty;
         var Name = string.Empty;

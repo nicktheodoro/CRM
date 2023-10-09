@@ -14,13 +14,13 @@ const routes: Array<RouteConfig> = [
   {
     path: "/users/signin",
     name: "signin",
-    component: () => import("@/module/login/view/SignInView.vue"),
+    component: () => import("@/module/user/view/SignInView.vue"),
     meta: { requiresAuth: false },
   },
   {
     path: "/users/signup",
     name: "signup",
-    component: () => import("@/module/atendimento/view/SignUpView.vue"),
+    component: () => import("@/module/user/view/SignUpView.vue"),
     meta: { requiresAuth: false },
   },
   {
@@ -29,14 +29,6 @@ const routes: Array<RouteConfig> = [
     component: () => import("@/module/dashboard/views/DashboardView.vue"),
     meta: { requiresAuth: true },
   },
-  // {
-  //   path: '/about',
-  //   name: 'about',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  // }
 ];
 
 const router = new VueRouter({
@@ -45,13 +37,16 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const token = store.getters["GET_TOKEN"].value;
-
+router.beforeEach(async (to, from, next) => {
   if (to.matched.some((route) => route.meta.requiresAuth)) {
-    if (!token && from.name !== "signin" && from.name !== "signup") {
+    const isSignedIn = await store.dispatch("isSignedIn");
+    if (!isSignedIn) {
       next("/users/signin");
+      return;
     }
+
+    next();
+    return;
   }
 
   next();

@@ -2,20 +2,21 @@ import axios from "axios";
 
 import store from "@/store";
 
-import { fetchUsersRepository } from "../atendimento/repository/fetchUsersRepository";
-import { fetchUsersUseCase } from "../atendimento/domain/useCase/fetchUsersUseCase";
-import { createUserRepository } from "../atendimento/repository/createUserRepository";
-import { createUserUseCase } from "../atendimento/domain/useCase/createUserUseCase";
-import { UserController } from "../atendimento/controller/UserController";
+import { fetchUsersRepository } from "../user/repository/fetchUsersRepository";
+import { fetchUsersUseCase } from "../user/domain/useCase/fetchUsersUseCase";
+import { createUserRepository } from "../user/repository/createUserRepository";
+import { createUserUseCase } from "../user/domain/useCase/createUserUseCase";
+import { UserController } from "../user/controller/UserController";
 
-import { authenticateRepository } from "../login/repository/authenticateRepository";
-import { authenticateUseCase } from "../login/domain/useCase/authenticateUseCase";
-import { AuthenticateController } from "../login/controller/AuthController";
+import { authenticateRepository } from "../auth/repository/authenticateRepository";
+import { authenticateUseCase } from "../auth/domain/useCase/authenticateUseCase";
+import { logoutUseCase } from "../auth/domain/useCase/logoutUseCase";
+import { logoutRepository } from "../auth/repository/logoutRepository";
 
 axios.defaults.headers.common["Accept"] = "*/*";
 axios.defaults.headers.common["Content-Type"] =
   "application/json;charset=UTF-8";
-axios.defaults.baseURL = "https://localhost:7213/api";
+axios.defaults.baseURL = "http://localhost:5166/api";
 const axiosInstance = axios.create();
 
 axiosInstance.interceptors.response.use(
@@ -31,33 +32,26 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-const authenticateController = (context: any) => {
-  const authenticateRepositoryImpl = authenticateRepository(axiosInstance);
-  const authenticateUseCaseImpl = authenticateUseCase(
-    authenticateRepositoryImpl
-  );
+const authenticateUseCaseImpl = authenticateUseCase(
+  authenticateRepository(axiosInstance)
+);
 
-  return new AuthenticateController(context, store, authenticateUseCaseImpl);
-};
+const logoutUseCaseImpl = logoutUseCase(logoutRepository(axiosInstance));
+
+const fetchUsersUseCaseImpl = fetchUsersUseCase(
+  fetchUsersRepository(axiosInstance)
+);
+const createUserUseCaseImpl = createUserUseCase(
+  createUserRepository(axiosInstance)
+);
 
 const usuarioController = (context: any) => {
-  const fetchUsersRepositoryImpl = fetchUsersRepository(axiosInstance);
-  const fetchUsersUseCaseImpl = fetchUsersUseCase(fetchUsersRepositoryImpl);
-  const createUserRepositoryImpl = createUserRepository(axiosInstance);
-  const createUserUseCaseImpl = createUserUseCase(createUserRepositoryImpl);
-
-  const authenticateRepositoryImpl = authenticateRepository(axiosInstance);
-  const authenticateUseCaseImpl = authenticateUseCase(
-    authenticateRepositoryImpl
-  );
-
-  return new UserController(
-    context,
-    store,
-    fetchUsersUseCaseImpl,
-    createUserUseCaseImpl,
-    authenticateUseCaseImpl
-  );
+  return new UserController(context, store, fetchUsersUseCaseImpl);
 };
 
-export { authenticateController, usuarioController };
+export {
+  usuarioController,
+  authenticateUseCaseImpl,
+  createUserUseCaseImpl,
+  logoutUseCaseImpl,
+};

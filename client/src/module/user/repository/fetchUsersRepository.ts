@@ -1,5 +1,5 @@
 import { TablePagination } from "@/module/pagination/domain/model/pagination";
-import { UserPagination } from "@/module/atendimento/domain/model/user";
+import { UserPagination } from "@/module/user/domain/model/user";
 import { AxiosInstance } from "axios";
 
 interface FetchUsersRepository {

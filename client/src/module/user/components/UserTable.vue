@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { UserController } from "@/module/atendimento/controller/UserController";
+import { UserController } from "../controller/UserController";
 
 export default {
   props: {

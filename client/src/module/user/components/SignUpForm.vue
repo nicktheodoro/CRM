@@ -9,17 +9,17 @@
         <v-text-field
           label="Name"
           v-model="controller.user.name"
-          :rules="[(v) => !!v || 'Required']"
+          :rules="[isRequired]"
         />
         <v-text-field
           label="Email"
           v-model="controller.user.email"
-          :rules="[(v) => !!v || 'Required']"
+          :rules="[isRequired]"
         />
         <v-text-field
           label="Password"
           v-model="controller.user.password"
-          :rules="[(v) => !!v || 'Required']"
+          :rules="[isRequired]"
         />
         <v-btn color="primary" type="submit">Sign in</v-btn>
       </v-form>
@@ -28,15 +28,22 @@
 </template>
 
 <script lang="ts">
-import { UserController } from "@/module/atendimento/controller/UserController";
+import Vue from "vue";
 
-export default {
-  name: "UserForm",
+import { UserController } from "../controller/UserController";
+
+export default Vue.extend({
+  name: "SignUpForm",
   props: {
     controller: {
       type: UserController,
       required: true,
     },
   },
-};
+  methods: {
+    isRequired(value: string) {
+      return !!value || "Required";
+    },
+  },
+});
 </script>
