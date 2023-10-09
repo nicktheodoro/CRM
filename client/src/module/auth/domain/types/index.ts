@@ -6,7 +6,7 @@ interface AuthenticateRequest {
 interface AuthenticateResponse {
   accessToken: string;
   refreshToken: string;
-  expirenIn: number;
+  expiresIn: number;
   tokenType: string;
 }
 

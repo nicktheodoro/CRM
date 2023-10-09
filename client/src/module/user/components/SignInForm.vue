@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-  <v-card tile elevation="2">
+  <v-card elevation="2" class="pa-4">
     <v-form @submit.prevent="controller.signIn()" ref="form">
       <v-text-field
         v-model="controller.form.email"
@@ -15,7 +15,14 @@
         required
         @click:append="togglePasswordVisibility()"
       ></v-text-field>
-      <v-btn width="100%" color="primary" type="submit">Sign in</v-btn>
+      <v-btn
+        :disabled="loading"
+        :loading="loading"
+        width="100%"
+        color="primary"
+        type="submit"
+        >Sign in</v-btn
+      >
     </v-form>
   </v-card>
 </template>
@@ -32,6 +39,7 @@ export default Vue.extend({
       type: UserController,
       required: true,
     },
+    loading: { type: Boolean, default: () => false },
   },
   data() {
     return {

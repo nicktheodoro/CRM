@@ -9,18 +9,17 @@ const SUCCESS = "success";
 const ERROR = "error";
 
 const state: AppState = {
-  loading: true,
+  loading: false,
   mode: "",
   snackbar: false,
   notice: "",
 };
 
 const mutations = {
-  setLoading(state: AppState, loading: boolean) {
-    state.loading = loading;
+  toggleLoading(state: AppState) {
+    state.loading = !state.loading;
   },
   setNotice(state: AppState, notice: string) {
-    console.log(" notice .... ", notice);
     state.notice = notice;
   },
   setSnackbar(state: AppState, snackbar: boolean) {
@@ -33,15 +32,15 @@ const mutations = {
 
 const actions = {
   closeNotice(context: any) {
+    context.commit("setSnackbar", false);
     context.commit("setNotice", "");
     context.commit("setMode", "");
-    context.commit("setSnackbar", false);
   },
-  closeNoticeWithDelay(context: any, timeout = 2000) {
+  closeNoticeWithDelay(context: any, timeout = 3000) {
     setTimeout(() => {
+      context.commit("setSnackbar", false);
       context.commit("setNotice", "");
       context.commit("setMode", "");
-      context.commit("setSnackbar", false);
     }, timeout);
   },
   sendSuccessNotice(context: any, notice: string) {

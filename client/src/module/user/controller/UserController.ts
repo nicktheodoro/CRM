@@ -5,8 +5,11 @@ import { Store } from "vuex";
 
 class UserController {
   public options: any;
+  public loading = false;
+
   public user = new UserModel({});
   public userPagination = new UserPagination();
+
   public headers = headers;
   public form = {
     email: undefined,
