@@ -16,6 +16,7 @@ import app from "./app";
 
 interface UserState {
   token: AuthenticateResponse;
+  isSignedIn: boolean;
 }
 
 const state: UserState = {
@@ -25,6 +26,7 @@ const state: UserState = {
     expiresIn: 0,
     tokenType: "",
   },
+  isSignedIn: false,
 };
 
 const mutations = {
@@ -34,32 +36,34 @@ const mutations = {
   ) {
     state.token = token;
   },
+  setIsSignedIn(state: { isSignedIn: boolean }, signed: boolean) {
+    state.isSignedIn = signed;
+  },
 };
 
 const getters = {
   getToken(state: { token: AuthenticateResponse }) {
     return state.token;
   },
+  getIsSignedIn(state: { isSignedIn: boolean }) {
+    return state.isSignedIn;
+  },
 };
 
 const actions = {
-  isSignedIn(context: ActionContext<any, any>) {
-    const token = context.getters.getToken;
-
-    if (!token.accessToken) return false;
-
-    // const isExpired = !!token.expiresIn && Date.now() > token.expiresIn * 1000;
-
-    // if (isExpired) return false;
-
-    return true;
+  isSignedIn(): boolean {
+    return state.isSignedIn;
   },
-  async signIn(context: ActionContext<any, any>, request: AuthenticateRequest) {
+  async signIn(
+    context: ActionContext<any, any>,
+    request: AuthenticateRequest
+  ): Promise<boolean> {
     app.mutations.toggleLoading(app.state);
 
     try {
       const token = await authenticateUseCaseImpl(request);
-      context.commit("setToken", token);
+      mutations.setToken(context.state, token);
+      mutations.setIsSignedIn(context.state, !state.isSignedIn);
       return true;
     } catch (error: any) {
       app.actions.sendErrorNotice(context, error.response.data.message);
@@ -68,11 +72,15 @@ const actions = {
       app.mutations.toggleLoading(app.state);
     }
   },
-  async signUp(context: ActionContext<any, any>, request: UserModel) {
+  async signUp(
+    context: ActionContext<any, any>,
+    request: UserModel
+  ): Promise<boolean> {
     app.mutations.toggleLoading(app.state);
 
     try {
       await createUserUseCaseImpl(request);
+      mutations.setIsSignedIn(context.state, !state.isSignedIn);
       return true;
     } catch (error: any) {
       app.actions.sendErrorNotice(
@@ -86,11 +94,12 @@ const actions = {
       app.mutations.toggleLoading(app.state);
     }
   },
-  async signOut(context: ActionContext<any, any>) {
+  async signOut(context: ActionContext<any, any>): Promise<boolean> {
     app.mutations.toggleLoading(app.state);
 
     try {
       await logoutUseCaseImpl(context.getters.GET_TOKEN);
+      mutations.setIsSignedIn(context.state, !state.isSignedIn);
       return true;
     } catch (error: any) {
       app.actions.sendErrorNotice(context, error.response.data.message);
