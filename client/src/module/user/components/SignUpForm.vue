@@ -14,6 +14,7 @@
         <v-text-field
           label="Email"
           v-model="controller.user.email"
+          type="email"
           :rules="[isRequired]"
         />
         <v-text-field
@@ -21,7 +22,13 @@
           v-model="controller.user.password"
           :rules="[isRequired]"
         />
-        <v-btn color="primary" type="submit">Sign in</v-btn>
+        <v-btn
+          :disabled="loading"
+          :loading="loading"
+          color="primary"
+          type="submit"
+          >Sign Up</v-btn
+        >
       </v-form>
     </v-card-text>
   </v-card>
@@ -29,7 +36,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-
+import store from "@/store";
 import { UserController } from "../controller/UserController";
 
 export default Vue.extend({
@@ -38,6 +45,11 @@ export default Vue.extend({
     controller: {
       type: UserController,
       required: true,
+    },
+  },
+  computed: {
+    loading() {
+      return store.state.app.loading;
     },
   },
   methods: {

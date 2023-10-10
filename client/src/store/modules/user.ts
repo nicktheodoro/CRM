@@ -69,21 +69,34 @@ const actions = {
     }
   },
   async signUp(context: ActionContext<any, any>, request: UserModel) {
+    app.mutations.toggleLoading(app.state);
+
     try {
       await createUserUseCaseImpl(request);
       return true;
     } catch (error: any) {
-      app.actions.sendErrorNotice(context, error.response.data.message);
+      app.actions.sendErrorNotice(
+        context,
+        error.response.data.errors
+          .map((e: any) => `${e.propertyName} : ${e.errorMessage}`)
+          .join(", ")
+      );
       return false;
+    } finally {
+      app.mutations.toggleLoading(app.state);
     }
   },
   async signOut(context: ActionContext<any, any>) {
+    app.mutations.toggleLoading(app.state);
+
     try {
       await logoutUseCaseImpl(context.getters.GET_TOKEN);
       return true;
     } catch (error: any) {
       app.actions.sendErrorNotice(context, error.response.data.message);
       return false;
+    } finally {
+      app.mutations.toggleLoading(app.state);
     }
   },
 };

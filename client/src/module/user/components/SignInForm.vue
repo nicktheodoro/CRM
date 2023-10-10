@@ -29,7 +29,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-
+import store from "@/store";
 import { UserController } from "../controller/UserController";
 
 export default Vue.extend({
@@ -39,12 +39,16 @@ export default Vue.extend({
       type: UserController,
       required: true,
     },
-    loading: { type: Boolean, default: () => false },
   },
   data() {
     return {
       showPassword: false,
     };
+  },
+  computed: {
+    loading() {
+      return store.state.app.loading;
+    },
   },
   methods: {
     togglePasswordVisibility() {
