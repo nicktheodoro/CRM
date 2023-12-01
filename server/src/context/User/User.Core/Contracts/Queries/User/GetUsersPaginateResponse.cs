@@ -1,6 +1,6 @@
 ﻿using MyApp.SharedDomain.Queries;
 
-namespace MyApp.Core.Users.Queries
+namespace User.Core.Contracts.Queries
 {
     public class GetUsersPaginateResponse : PaginateQueryResponseBase<GetUserResponse>
     {

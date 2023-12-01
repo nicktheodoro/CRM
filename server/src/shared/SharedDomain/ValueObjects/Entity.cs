@@ -9,12 +9,10 @@ namespace MyApp.SharedDomain.ValueObjects
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
-        //public Guid Id { get; } = Guid.NewGuid();
-
-
         protected Entity()
         {
             Id = Guid.NewGuid();
+            CreatedAt = DateTime.UtcNow;
         }
 
         public abstract bool Valid(out ValidationResult validationResult);

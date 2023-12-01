@@ -1,7 +1,8 @@
 ﻿using FluentValidation.Results;
 using MyApp.SharedDomain.Commands;
+using User.Core.Contracts.Commands.User.Validators;
 
-namespace MyApp.Core.Users.Commands
+namespace User.Core.Contracts.Commands
 {
     public class DeleteUserCommand : CommandBase
     {

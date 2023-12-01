@@ -1,9 +1,9 @@
 ﻿using MyApp.SharedDomain.Interfaces;
-using MyApp.Users.Models;
+using User.Core.Models.User;
 
 namespace MyApp.Core.Users.Interfaces
 {
-    public interface IUserRepository : IEFRepository<User>
+    public interface IUserRepository : IEFRepository<UserModel>
     {
     }
 }

@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using MyApp.SharedDomain.Messages;
 
-namespace MyApp.Core.Users.Commands
+namespace User.Core.Contracts.Commands.User.Validators
 {
-    public class InactiveUserCommandValidator : AbstractValidator<InactiveUserCommand>
+    public class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand>
     {
-        public InactiveUserCommandValidator()
+        public DeleteUserCommandValidator()
         {
             RuleFor(r => r.Id)
                 .NotEmpty()

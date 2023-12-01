@@ -5,8 +5,6 @@ namespace MyApp.SharedDomain.Commands
 {
     public abstract class InsertCommandBase : IRequest<CommandResponse>
     {
-        public DateTime CreatedAt { get; } = DateTime.UtcNow;
-
         public abstract bool Valid(out ValidationResult validationResult);
     }
 }

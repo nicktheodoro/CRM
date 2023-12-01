@@ -39,7 +39,7 @@ namespace CRM.Application.Controllers
         {
             var user = await _tokenService.GetDatabaseUser(request, Request.GetRequestIP());
 
-            if (string.IsNullOrEmpty(user.ID))
+            if (string.IsNullOrEmpty(user.ID.ToString()))
             {
                 return BadRequest(new { message = "Invalid username or password" });
             }

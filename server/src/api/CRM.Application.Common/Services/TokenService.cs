@@ -28,7 +28,7 @@ public class TokenService : ITokenService
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.ID),
+                new Claim(ClaimTypes.NameIdentifier, user.ID.ToString()),
                 new Claim("Name", user.Name),
                 new Claim("Email", user.Email),
                 new Claim("IpAddress", user.IpAddress)
@@ -73,7 +73,7 @@ public class TokenService : ITokenService
         }
 
         return new UserRequest(
-            principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value,
+            new Guid(principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value),
             principal.Claims.FirstOrDefault(x => x.Type == "Name")?.Value,
             principal.Claims.FirstOrDefault(x => x.Type == "Email")?.Value,
             principal.Claims.FirstOrDefault(x => x.Type == "IpAddress")?.Value
@@ -100,7 +100,7 @@ public class TokenService : ITokenService
             TripleDes.Decrypt(_tokenConfiguration.GetSecretAsByteArray(), refreshToken)
         );
 
-        return refreshInfo.ID.ToUpper().Equals(user.ID.ToUpper()) &&
+        return refreshInfo.ID.ToString().ToUpper().Equals(user.ID.ToString().ToUpper()) &&
                refreshInfo.Name.ToUpper().Equals(user.Name.ToUpper()) &&
                refreshInfo.IP.ToUpper().Equals(Environment.MachineName.ToUpper());
     }
@@ -118,7 +118,7 @@ public class TokenService : ITokenService
     {
         var sql = "SELECT \"Id\", \"Name\", \"Email\", \"PasswordHash\" FROM public.\"Users\" WHERE \"Email\" = @email AND \"IsActive\" = true";
 
-        var ID = string.Empty;
+        var ID = Guid.Empty;
         var Name = string.Empty;
         var Email = string.Empty;
         var PasswordHash = string.Empty;
@@ -135,7 +135,7 @@ public class TokenService : ITokenService
 
                 if (reader.Read())
                 {
-                    ID = reader.GetString(0);
+                    ID = reader.GetGuid(0);
                     Name = reader.GetString(1);
                     Email = reader.GetString(2);
                     PasswordHash = reader.GetString(3);

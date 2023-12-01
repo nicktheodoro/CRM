@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
 using MyApp.SharedDomain.Messages;
+using User.Core.Contracts.Commands.User.Image;
 
-namespace MyApp.Core.Users.Commands
+namespace User.Core.Contracts.Commands.User.Validators
 {
     public class UpdateUserPasswordCommandValidator : AbstractValidator<UpdateUserPassword>
     {

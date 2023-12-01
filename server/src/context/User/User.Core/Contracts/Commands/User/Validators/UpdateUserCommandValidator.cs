@@ -1,12 +1,17 @@
 ﻿using FluentValidation;
 using MyApp.SharedDomain.Messages;
+using User.Core.Contracts.Commands.User;
 
-namespace MyApp.Core.Users.Commands
+namespace User.Core.Contracts.Commands
 {
-    public class InsertUserCommandValidator : AbstractValidator<InsertUserCommand>
+    public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
     {
-        public InsertUserCommandValidator()
+        public UpdateUserCommandValidator()
         {
+            RuleFor(r => r.Id)
+                .NotEmpty()
+                .WithMessage(ValidationMessage.Required());
+
             RuleFor(r => r.Name)
                 .NotEmpty()
                 .WithMessage(ValidationMessage.Required());
@@ -16,6 +21,10 @@ namespace MyApp.Core.Users.Commands
                 .WithMessage(ValidationMessage.Required())
                 .EmailAddress()
                 .WithMessage("Invalid email.");
+
+            RuleFor(r => r.IsActive)
+                .NotEmpty()
+                .WithMessage(ValidationMessage.Required());
 
             RuleFor(r => r.Password)
                 .NotEmpty()

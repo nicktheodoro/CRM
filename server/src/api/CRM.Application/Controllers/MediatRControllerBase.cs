@@ -1,11 +1,12 @@
-﻿using System.Net;
-using MediatR;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyApp.SharedDomain.Commands;
 using MyApp.SharedDomain.Exceptions;
 using MyApp.SharedDomain.Exceptions.ValidacaoException;
 using MyApp.SharedDomain.Queries;
 using MyApp.SharedDomain.ValueObjects;
+using System.Net;
 
 namespace MyApp.Application.Controllers
 {
@@ -35,7 +36,8 @@ namespace MyApp.Application.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(int page, int pageSize)
+        [Authorize]
+        public virtual async Task<IActionResult> GetAll(int page, int pageSize)
         {
             var request = Activator.CreateInstance(typeof(TGetPaginateQuery)) as TGetPaginateQuery
                 ?? throw new ExceptionBase("Invalid request type.", HttpStatusCode.InternalServerError);
@@ -47,7 +49,8 @@ namespace MyApp.Application.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+        [Authorize]
+        public virtual async Task<IActionResult> GetById(Guid id)
         {
             var request = Activator.CreateInstance(typeof(TGetQuery)) as TGetQuery
                 ?? throw new ExceptionBase("Invalid request type.", HttpStatusCode.InternalServerError);
@@ -58,19 +61,21 @@ namespace MyApp.Application.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Insert(TInsertCommand request)
+        public virtual async Task<IActionResult> Insert(TInsertCommand request)
         {
             return await Result(request, HttpStatusCode.Created);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(TUpdateCommand request)
+        [Authorize]
+        public virtual async Task<IActionResult> Update(TUpdateCommand request)
         {
             return await Result(request, HttpStatusCode.OK);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        [Authorize]
+        public virtual async Task<IActionResult> Delete(Guid id)
         {
             var request = Activator.CreateInstance(typeof(TDeleteCommand)) as TDeleteCommand
                    ?? throw new ExceptionBase("Invalid request type.", HttpStatusCode.InternalServerError);
@@ -80,7 +85,7 @@ namespace MyApp.Application.Controllers
             return await Result(request, HttpStatusCode.NoContent);
         }
 
-        protected async Task<IActionResult> Result(IBaseRequest request, HttpStatusCode statusCode)
+        protected virtual async Task<IActionResult> Result(IBaseRequest request, HttpStatusCode statusCode)
         {
             try
             {

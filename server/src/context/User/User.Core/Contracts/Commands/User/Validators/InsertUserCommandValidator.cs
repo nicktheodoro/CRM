@@ -1,16 +1,13 @@
 ﻿using FluentValidation;
 using MyApp.SharedDomain.Messages;
+using User.Core.Contracts.Commands.User.Image.Validators;
 
-namespace MyApp.Core.Users.Commands
+namespace User.Core.Contracts.Commands.User.Validators
 {
-    public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand>
+    public class InsertUserCommandValidator : AbstractValidator<InsertUserCommand>
     {
-        public UpdateUserCommandValidator()
+        public InsertUserCommandValidator()
         {
-            RuleFor(r => r.Id)
-                .NotEmpty()
-                .WithMessage(ValidationMessage.Required());
-
             RuleFor(r => r.Name)
                 .NotEmpty()
                 .WithMessage(ValidationMessage.Required());
@@ -21,13 +18,14 @@ namespace MyApp.Core.Users.Commands
                 .EmailAddress()
                 .WithMessage("Invalid email.");
 
-            RuleFor(r => r.IsActive)
-                .NotEmpty()
-                .WithMessage(ValidationMessage.Required());
-
             RuleFor(r => r.Password)
                 .NotEmpty()
                 .WithMessage(ValidationMessage.Required());
+
+            RuleFor(r => r.Image)
+                .NotNull()
+                .When(x => x.Image is not null)
+                .SetValidator(new InsertImageCommandValidator());
         }
     }
 }

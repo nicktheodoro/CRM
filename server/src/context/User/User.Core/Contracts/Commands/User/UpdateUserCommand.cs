@@ -1,7 +1,7 @@
 ﻿using FluentValidation.Results;
 using MyApp.SharedDomain.Commands;
 
-namespace MyApp.Core.Users.Commands
+namespace User.Core.Contracts.Commands
 {
     public class UpdateUserCommand : CommandBase
     {

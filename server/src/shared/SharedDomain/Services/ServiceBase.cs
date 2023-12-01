@@ -8,7 +8,7 @@ using MyApp.SharedDomain.ValueObjects;
 
 namespace MyApp.SharedDomain.Services
 {
-    public abstract class BaseService<TEntity> where TEntity : Entity
+    public class BaseService<TEntity> where TEntity : Entity
     {
         protected readonly IMapper _mapper;
         protected readonly IEFRepository<TEntity> _repository;
@@ -43,7 +43,6 @@ namespace MyApp.SharedDomain.Services
         public virtual async Task<CommandResponse> InsertAsync(InsertCommandBase command)
         {
             var entity = _mapper.Map<TEntity>(command);
-            //entity.CreatedAt = DateTime.UtcNow;
 
             if (!entity.Valid(out var validationResult))
             {
