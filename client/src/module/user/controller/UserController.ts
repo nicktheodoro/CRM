@@ -1,4 +1,5 @@
 import { headers } from "../const/tableHeaders";
+import { ImageModel } from "../domain/model/image";
 import { UserModel, UserPagination } from "../domain/model/user";
 import { FetchUsersUseCase } from "../domain/useCase/fetchUsersUseCase";
 import { Store } from "vuex";
@@ -11,9 +12,12 @@ class UserController {
   public userPagination = new UserPagination();
 
   public headers = headers;
+  
   public form = {
+    name: undefined,
     email: undefined,
     password: undefined,
+    image: new ImageModel({})
   };
 
   constructor(

@@ -1,4 +1,5 @@
 import { AxiosResponse } from "axios";
+import { ImageModel } from "./image";
 
 interface UserI {
   id?: string | null;
@@ -6,6 +7,7 @@ interface UserI {
   email?: string | null;
   password?: string | null;
   isActive?: boolean | null;
+  image?: ImageModel;
 }
 
 class UserModel {
@@ -14,6 +16,7 @@ class UserModel {
   email?: string | null;
   password?: string | null;
   isActive?: boolean | null;
+  image?: ImageModel;
 
   constructor(data: UserI) {
     this.id = data.id ?? null;
@@ -21,6 +24,7 @@ class UserModel {
     this.email = data.email ?? null;
     this.isActive = data.isActive ?? null;
     this.password = data.password ?? null;
+    this.image = data.image ?? new ImageModel({});
   }
 }
 

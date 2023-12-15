@@ -8,7 +8,14 @@ interface CreateUserUseCase {
 const createUserUseCase =
   (repository: CreateUserRepository): CreateUserUseCase =>
   async (user: UserModel) => {
-    const created = await repository(user);
+    // TODO: improve this ifs
+    const formData = new FormData();
+    if (user.email) formData.append("email", user.email);
+    if (user.name) formData.append("name", user.name);
+    if (user.password) formData.append("password", user.password);
+    if (user.image?.content) formData.append("image.content", user.image.content);
+
+    const created = await repository(formData);
     return created;
   };
 
