@@ -22,6 +22,12 @@
           v-model="controller.user.password"
           :rules="[isRequired]"
         />
+        <v-file-input
+          label="Photo"
+          accept="image/*"
+          prepend-icon="mdi-camera"
+          v-model="controller.user.image.content"
+        ></v-file-input>
         <v-btn
           :disabled="loading"
           :loading="loading"
