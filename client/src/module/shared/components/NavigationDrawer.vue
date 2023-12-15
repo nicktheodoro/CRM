@@ -8,10 +8,10 @@
     >
       <v-list-item class="px-2">
         <v-list-item-avatar>
-          <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
+          <v-img :src="photo" alt="User image" />
         </v-list-item-avatar>
 
-        <v-list-item-title>John Leider</v-list-item-title>
+        <v-list-item-title>{{ user.name }}</v-list-item-title>
 
         <v-btn icon @click.stop="mini = !mini">
           <v-icon>mdi-chevron-left</v-icon>
@@ -37,6 +37,7 @@
 
 <script lang="ts">
 import store from "@/store";
+import { UserModel } from "@/module/user/domain/model/user";
 
 export default {
   name: "NavigationDrawer",
@@ -53,8 +54,14 @@ export default {
     };
   },
   computed: {
-    isSignedIn() {
+    isSignedIn(): boolean {
       return store.state.user.isSignedIn;
+    },
+    user(): UserModel {
+      return store.state.user.current;
+    },
+    photo(): string {
+      return `data:image/png;base64, ${store.state.user.current.image.content}`;
     },
   },
 };
