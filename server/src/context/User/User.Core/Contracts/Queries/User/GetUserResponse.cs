@@ -1,5 +1,5 @@
 ﻿using MyApp.SharedDomain.Queries;
-using User.Core.Models.User.Image;
+using User.Core.Contracts.Queries.User.Image;
 
 namespace User.Core.Contracts.Queries
 {
@@ -9,6 +9,6 @@ namespace User.Core.Contracts.Queries
         public string Email { get; set; }
         public bool IsActive { get; set; }
 
-        public virtual ImageModel? Image { get; set; }
+        public virtual GetUserImageResponse? Image { get; set; }
     }
 }

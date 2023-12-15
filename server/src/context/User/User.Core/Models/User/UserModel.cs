@@ -1,5 +1,4 @@
 ﻿using FluentValidation.Results;
-using Microsoft.AspNetCore.Http;
 using MyApp.SharedDomain.Exceptions;
 using MyApp.SharedDomain.ValueObjects;
 using System.Net;
@@ -10,8 +9,8 @@ namespace User.Core.Models.User
 {
     public class UserModel : Entity
     {
-        public string? Name { get; set; }
-        public string? Email { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
         public bool IsActive { get; set; } = true;
         public string PasswordHash { get => _passwordHash; set => _passwordHash = HashPassword(value); }
 
@@ -19,27 +18,15 @@ namespace User.Core.Models.User
 
         private string _passwordHash;
 
-        public void AddImage(IFormFile image)
+        public void AddImage(ImageModel image)
         {
             if (image == null)
             {
                 return;
             }
 
-            if (!image.ContentType.ToLower().StartsWith("image/"))
-            {
-                throw new ExceptionBase("Invalid image", HttpStatusCode.BadRequest);
-            }
-
-            MemoryStream ms = new MemoryStream();
-            image.OpenReadStream().CopyTo(ms);
-
-            Image = new ImageModel()
-            {
-                Content = ms.ToArray(),
-                ContentType = image.ContentType,
-                UserMaster = this,
-            };
+            image.UserMaster = this;
+            Image = image;
         }
 
         public void InactiveUser()

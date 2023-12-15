@@ -21,16 +21,16 @@ namespace MyApp.SharedDomain.Services
             _repository = repository;
         }
 
-        public virtual async Task<TResponse> GetByIdAsync<TResponse>(QueryBase<TResponse> query)
+        public virtual async Task<TResponse> GetAsync<TResponse>(QueryBase<TResponse> query)
         {
-            var entity = await _repository.GetByIdAsync(query.Id) ?? throw new NotFoundException(query.Id);
+            var entity = await _repository.GetAsync(query.Id) ?? throw new NotFoundException(query.Id);
 
             return _mapper.Map<TResponse>(entity);
         }
 
         public virtual async Task<TEntity> GetEntityByIdAsync(Guid id)
         {
-            return await _repository.GetByIdAsync(id) ?? throw new NotFoundException(id);
+            return await _repository.GetAsync(id) ?? throw new NotFoundException(id);
         }
 
         public virtual async Task<PaginateQueryResponseBase<TResponse>> GetAllAsync<TResponse>(PaginateQueryBase<TResponse> paginateQuery)

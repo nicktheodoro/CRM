@@ -6,7 +6,6 @@ using MyApp.SharedDomain.Handlers;
 using MyApp.SharedDomain.Queries;
 using User.Core.Contracts.Commands;
 using User.Core.Contracts.Queries;
-using User.Core.Contracts.Queries.User.Image;
 using User.Core.Models.User;
 
 namespace MyApp.Core.Users.Handlers
@@ -22,7 +21,6 @@ namespace MyApp.Core.Users.Handlers
             DeleteUserCommand>,
         IRequestHandler<GetUserQuery, GetUserResponse>,
         IRequestHandler<GetUsersPaginateQuery, PaginateQueryResponseBase<GetUserResponse>>,
-        IRequestHandler<GetUserImageQuery, GetUserImageResponse>,
         IRequestHandler<InsertUserCommand, CommandResponse>,
         IRequestHandler<UpdateUserCommand, CommandResponse>,
         IRequestHandler<DeleteUserCommand, CommandResponse>,
@@ -36,9 +34,9 @@ namespace MyApp.Core.Users.Handlers
             _userService = userService;
         }
 
-        public async Task<GetUserImageResponse> Handle(GetUserImageQuery request, CancellationToken cancellationToken)
+        public new async Task<GetUserResponse> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
-            return await _userService.GetUserImageAsync(request);
+            return await _userService.GetAsync(request);
         }
 
         public async Task<CommandResponse> Handle(InactiveUserCommand request, CancellationToken cancellationToken)

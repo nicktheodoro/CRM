@@ -5,7 +5,7 @@ namespace MyApp.SharedDomain.Queries
 {
     public class QueryBase<TResponse> : IRequest<TResponse>
     {
-        public required Guid Id { get; set; }
+        public Guid Id { get; set; }
 
         public virtual bool Valid(out ValidationResult validationResult)
         {

@@ -6,7 +6,9 @@ using MyApp.SharedDomain.Exceptions;
 using MyApp.SharedDomain.Exceptions.ValidacaoException;
 using MyApp.SharedDomain.Queries;
 using MyApp.SharedDomain.ValueObjects;
+using System.Linq;
 using System.Net;
+using User.Core.Contracts.Queries;
 
 namespace MyApp.Application.Controllers
 {
@@ -49,13 +51,12 @@ namespace MyApp.Application.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
-        public virtual async Task<IActionResult> GetById(Guid id)
+        public virtual async Task<IActionResult> Get(string id)
         {
             var request = Activator.CreateInstance(typeof(TGetQuery)) as TGetQuery
                 ?? throw new ExceptionBase("Invalid request type.", HttpStatusCode.InternalServerError);
 
-            request.Id = id;
+            request.Id = new Guid(id);
 
             return await Result(request, HttpStatusCode.OK);
         }

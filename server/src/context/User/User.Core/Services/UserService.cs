@@ -1,17 +1,29 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using MyApp.Core.Users.Interfaces;
 using MyApp.SharedDomain.Commands;
+using MyApp.SharedDomain.Exceptions;
 using MyApp.SharedDomain.Services;
 using User.Core.Contracts.Commands;
-using User.Core.Contracts.Queries.User.Image;
+using User.Core.Contracts.Queries;
 using User.Core.Models.User;
+using User.Core.Models.User.Image;
 
 namespace MyApp.Core.Users.Services
 {
     public class UserService : BaseService<UserModel>
     {
+        private readonly IUserRepository _userRepository;
+        
         public UserService(IMapper mapper, IUserRepository repository) : base(mapper, repository)
         {
+            _userRepository = repository;
+        }
+
+        public async Task<GetUserResponse> GetAsync(GetUserQuery query)
+        {
+            var entity = await _userRepository.GetAsync(query) ?? throw new NotFoundException(query);
+            return _mapper.Map<GetUserResponse>(entity);
         }
 
         public async Task<CommandResponse> InactiveUserAsync(InactiveUserCommand command)
@@ -27,7 +39,12 @@ namespace MyApp.Core.Users.Services
         public async Task<CommandResponse> InsertAsync(InsertUserCommand command)
         {
             var entity = _mapper.Map<UserModel>(command);
-            entity.AddImage(command.Image?.Content);
+
+            if (command.Image != null)
+            {
+                var imageEntity = await ConvertFormFileToImageModelAsync(command.Image.Content);
+                entity.AddImage(imageEntity);
+            }
 
             await _repository.InsertAsync(entity);
             await _repository.SaveChangesAsync();
@@ -45,13 +62,15 @@ namespace MyApp.Core.Users.Services
             return new CommandResponse() { Id = entity.Id, Message = "Password updated" };
         }
 
-        public async Task<GetUserImageResponse> GetUserImageAsync(GetUserImageQuery query)
+        private static async Task<ImageModel> ConvertFormFileToImageModelAsync(IFormFile formFile)
         {
-            var user = await GetEntityByIdAsync(query.Id);
-            return new GetUserImageResponse() { 
-                Id = user.Id.ToString(), 
-                Content = user.Image?.Content, 
-                ContentType = user.Image?.ContentType 
+            using var memoryStream = new MemoryStream();
+            await formFile.CopyToAsync(memoryStream);
+
+            return new ImageModel
+            {
+                Content = memoryStream.ToArray(),
+                ContentType = formFile.ContentType
             };
         }
     }

@@ -11,6 +11,12 @@ namespace User.Core.Contracts.Commands.User.Image.Validators
             RuleFor(x => x.Content)
                 .NotNull()
                 .WithMessage(ValidationMessage.Required());
+
+
+            RuleFor(x => x.Content.ContentType)
+                .NotNull()
+                .Must(x => x.ToLower().StartsWith("image/"))
+                .WithMessage("Invalid image file");
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyApp.SharedDomain.Exceptions;
 using System.Net;
 using User.Core.Contracts.Commands;
 using User.Core.Contracts.Queries;
-using User.Core.Contracts.Queries.User.Image;
 using User.Core.Models.User;
 
 namespace MyApp.Application.Controllers
@@ -31,18 +31,22 @@ namespace MyApp.Application.Controllers
             return base.Insert(request);
         }
 
+        [HttpGet("{param}")]
+        public async override Task<IActionResult> Get(string param)
+        {
+            var request = new GetUserQuery();
+
+            if (Guid.TryParse(param, out var _)) request.Id = new Guid(param);
+            else request.Email = param;
+  
+            return await Result(request, HttpStatusCode.OK);
+        }
+
         [HttpPatch("inactive")]
         [Authorize]
         public async Task<IActionResult> InactiveUser(InactiveUserCommand request)
         {
             return await Result(request, HttpStatusCode.OK);
-        }
-
-        [HttpGet("{id}/image")]
-        [Authorize]
-        public async Task<IActionResult> GetUserImage(Guid id)
-        {
-            return await Result(new GetUserImageQuery() { Id = id }, HttpStatusCode.OK);
         }
 
         [HttpPatch("update-password")]

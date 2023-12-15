@@ -17,7 +17,7 @@ namespace MyApp.SharedDomain.Repositories
             _dbSet = _dbContext.Set<TEntity>();
         }
 
-        public virtual async Task<TEntity?> GetByIdAsync(Guid id)
+        public virtual async Task<TEntity?> GetAsync(Guid id)
         {
             return await _dbSet.FindAsync(id);
         }

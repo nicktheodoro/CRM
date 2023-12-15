@@ -49,7 +49,7 @@ namespace MyApp.SharedDomain.Handlers
                 throw new ValidacaoException(INVALID_QUERY, validationResult);
             }
 
-            return await _service.GetByIdAsync(request);
+            return await _service.GetAsync(request);
         }
 
         public virtual async Task<CommandResponse> Handle(TInsertCommand request, CancellationToken cancellationToken)
