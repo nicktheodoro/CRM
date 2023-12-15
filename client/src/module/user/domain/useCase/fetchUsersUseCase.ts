@@ -1,5 +1,8 @@
-import { FetchUsersRepository } from "../../repository/fetchUsersRepository";
-import { UserPagination } from "../model/user";
+import {
+  FetchUsersRepository,
+  FetchUserByIdRepository,
+} from "../../repository/fetchUsersRepository";
+import { UserModel, UserPagination } from "../model/user";
 import { DataOptions } from "vuetify";
 import { TablePagination } from "@/module/pagination/domain/model/pagination";
 
@@ -22,4 +25,21 @@ const fetchUsersUseCase =
     return userPagination;
   };
 
-export { fetchUsersUseCase, FetchUsersUseCase };
+  // TODO: Change this method name. Api finds by id or email
+interface FetchUserByIDUseCase {
+  (id?: string | null): Promise<UserModel>;
+}
+
+const fetchUserByIDUseCase =
+  (repository: FetchUserByIdRepository): FetchUserByIDUseCase =>
+  async (id?: string | null) => {
+    const user = await repository(id);
+    return user;
+  };
+
+export {
+  fetchUsersUseCase,
+  FetchUsersUseCase,
+  fetchUserByIDUseCase,
+  FetchUserByIDUseCase,
+};

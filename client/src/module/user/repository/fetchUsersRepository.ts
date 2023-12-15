@@ -1,5 +1,8 @@
 import { TablePagination } from "@/module/pagination/domain/model/pagination";
-import { UserPagination } from "@/module/user/domain/model/user";
+import {
+  UserModel,
+  UserPagination,
+} from "@/module/user/domain/model/user";
 import { AxiosInstance } from "axios";
 
 interface FetchUsersRepository {
@@ -16,4 +19,21 @@ const fetchUsersRepository =
     return new UserPagination(response);
   };
 
-export { fetchUsersRepository, FetchUsersRepository };
+interface FetchUserByIdRepository {
+  (id?: string | null): Promise<UserModel>;
+}
+
+const fetchUserByIdRepository =
+  (axios: AxiosInstance): FetchUserByIdRepository =>
+  async (id?: string | null) => {
+    const response = await axios.get(`/users/${id}`);
+
+    return new UserModel(response.data);
+  };
+
+export {
+  fetchUsersRepository,
+  FetchUsersRepository,
+  fetchUserByIdRepository,
+  FetchUserByIdRepository,
+};
