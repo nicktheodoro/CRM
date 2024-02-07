@@ -10,6 +10,6 @@
     <PackageReference Include="Npgsql" Version="7.0.6" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\shared\SharedDomain\SharedDomain.csproj" />
+    <ProjectReference Include="..\..\..\..\shared\Domain\src\Domain.Core\Domain.Core.csproj" />
   </ItemGroup>
 </Project>

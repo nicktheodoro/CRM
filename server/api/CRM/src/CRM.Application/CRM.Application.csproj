@@ -13,8 +13,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Product.Data.MySql\Product.Data.MySql.csproj" />
-    <ProjectReference Include="..\..\context\User\User.Core.Data.MySql\User.Data.MySql.csproj" />
+    <ProjectReference Include="..\..\..\..\context\Product\src\Product.Data.MySql\Product.Data.MySql.csproj" />
+    <ProjectReference Include="..\..\..\..\context\User\src\User.Core.Data.MySql\User.Data.MySql.csproj" />
     <ProjectReference Include="..\CRM.Application.Common\CRM.Application.Common.csproj" />
   </ItemGroup>
 </Project>

@@ -6,8 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\src\shared\SharedDomain\SharedDomain.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\shared\Domain\src\Domain.Core\Domain.Core.csproj" />
+  </ItemGroup>
 
 </Project>
