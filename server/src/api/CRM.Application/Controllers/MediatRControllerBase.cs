@@ -6,9 +6,7 @@ using MyApp.SharedDomain.Exceptions;
 using MyApp.SharedDomain.Exceptions.ValidacaoException;
 using MyApp.SharedDomain.Queries;
 using MyApp.SharedDomain.ValueObjects;
-using System.Linq;
 using System.Net;
-using User.Core.Contracts.Queries;
 
 namespace MyApp.Application.Controllers
 {
@@ -20,7 +18,7 @@ namespace MyApp.Application.Controllers
         TGetResponse,
         TInsertCommand,
         TUpdateCommand,
-        TDeleteCommand> : ControllerBase
+        TDeleteCommand>(IMediator mediator) : ControllerBase
         where TEntity : Entity
         where TGetPaginateQuery : PaginateQueryBase<TGetResponse>
         where TGetPaginateResponse : PaginateQueryResponseBase<TGetResponse>
@@ -30,12 +28,7 @@ namespace MyApp.Application.Controllers
         where TUpdateCommand : CommandBase
         where TDeleteCommand : CommandBase
     {
-        public readonly IMediator _mediator;
-
-        public MediatRControllerBase(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        public readonly IMediator _mediator = mediator;
 
         [HttpGet]
         [Authorize]

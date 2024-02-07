@@ -46,11 +46,11 @@ namespace User.Core.Models.User
 
         public override bool Valid(out ValidationResult validationResult)
         {
-            validationResult = new UserValidator().Validate(this);
+            validationResult = new UserModelValidator().Validate(this);
             return validationResult.IsValid;
         }
 
-        private string HashPassword(string password)
+        private static string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password, BCrypt.Net.BCrypt.GenerateSalt());
         }

@@ -7,14 +7,9 @@ namespace CRM.Application.Controllers
 {
     [ApiController]
     [Route("/api/auth")]
-    public class AuthController : ControllerBase
+    public class AuthController(ITokenService tokenService) : ControllerBase
     {
-        private readonly ITokenService _tokenService;
-
-        public AuthController(ITokenService tokenService)
-        {
-            _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
-        }
+        private readonly ITokenService _tokenService = tokenService ?? throw new ArgumentNullException(nameof(tokenService));
 
         /// <summary>API Availability Test</summary>
         /// <remarks>This endpoint allows checking if the API is available.</remarks>

@@ -4,9 +4,9 @@ using User.Core.Models.User.Image.Validators;
 
 namespace User.Core.Models.User.Validators
 {
-    internal class UserValidator : AbstractValidator<UserModel>
+    internal class UserModelValidator : AbstractValidator<UserModel>
     {
-        internal UserValidator()
+        internal UserModelValidator()
         {
             RuleFor(x => x.Name)
                 .NotEmpty()

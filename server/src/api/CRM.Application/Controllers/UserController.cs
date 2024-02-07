@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyApp.SharedDomain.Exceptions;
 using System.Net;
 using User.Core.Contracts.Commands;
 using User.Core.Contracts.Queries;
@@ -11,7 +10,7 @@ namespace MyApp.Application.Controllers
 {
     [ApiController]
     [Route("api/users")]
-    public class UserController : MediatRControllerBase<
+    public class UserController(IMediator mediator) : MediatRControllerBase<
         UserModel,
         GetUsersPaginateQuery,
         GetUsersPaginateResponse,
@@ -19,12 +18,8 @@ namespace MyApp.Application.Controllers
         GetUserResponse,
         InsertUserCommand,
         UpdateUserCommand,
-        DeleteUserCommand>
+        DeleteUserCommand>(mediator)
     {
-        public UserController(IMediator mediator) : base(mediator)
-        {
-        }
-
         [HttpPost]
         public override Task<IActionResult> Insert([FromForm] InsertUserCommand request)
         {
@@ -38,7 +33,7 @@ namespace MyApp.Application.Controllers
 
             if (Guid.TryParse(param, out var _)) request.Id = new Guid(param);
             else request.Email = param;
-  
+
             return await Result(request, HttpStatusCode.OK);
         }
 
