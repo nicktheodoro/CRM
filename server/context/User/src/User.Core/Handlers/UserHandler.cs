@@ -10,7 +10,7 @@ using User.Core.Models.User;
 
 namespace MyApp.Core.Users.Handlers
 {
-    public class UserHandler :
+    public class UserHandler(UserService userService) :
         HandlerBase<
             UserModel,
             GetUserQuery,
@@ -18,7 +18,7 @@ namespace MyApp.Core.Users.Handlers
             GetUsersPaginateQuery,
             InsertUserCommand,
             UpdateUserCommand,
-            DeleteUserCommand>,
+            DeleteUserCommand>(userService),
         IRequestHandler<GetUserQuery, GetUserResponse>,
         IRequestHandler<GetUsersPaginateQuery, PaginateQueryResponseBase<GetUserResponse>>,
         IRequestHandler<InsertUserCommand, CommandResponse>,
@@ -27,16 +27,9 @@ namespace MyApp.Core.Users.Handlers
         IRequestHandler<InactiveUserCommand, CommandResponse>,
         IRequestHandler<UpdateUserPassword, CommandResponse>
     {
-        private readonly UserService _userService;
-
-        public UserHandler(UserService userService) : base(userService)
-        {
-            _userService = userService;
-        }
-
         public new async Task<GetUserResponse> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {
-            return await _userService.GetAsync(request);
+            return await userService.GetAsync(request);
         }
 
         public async Task<CommandResponse> Handle(InactiveUserCommand request, CancellationToken cancellationToken)
@@ -46,7 +39,7 @@ namespace MyApp.Core.Users.Handlers
                 throw new ValidacaoException(INVALID_COMMAND, validationResult);
             }
 
-            return await _userService.InactiveUserAsync(request);
+            return await userService.InactiveUserAsync(request);
         }
 
         public async Task<CommandResponse> Handle(UpdateUserPassword request, CancellationToken cancellationToken)
@@ -56,12 +49,12 @@ namespace MyApp.Core.Users.Handlers
                 throw new ValidacaoException(INVALID_COMMAND, validationResult);
             }
 
-            return await _userService.UpdatePasswordAsync(request);
+            return await userService.UpdatePasswordAsync(request);
         }
 
         public override Task<CommandResponse> Handle(InsertUserCommand request, CancellationToken cancellationToken)
         {
-            return _userService.InsertAsync(request);
+            return userService.InsertAsync(request);
         }
     }
 }

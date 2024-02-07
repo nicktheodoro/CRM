@@ -39,6 +39,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "User.Data.MySql", "context\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Core", "shared\Domain\src\Domain.Core\Domain.Core.csproj", "{95F19141-52F6-4CFE-82F5-766EAC661A22}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.CrossCutting.Ioc", "context\Product\src\Product.CrossCutting.Ioc\Product.CrossCutting.Ioc.csproj", "{5C4F43FF-FCB6-4EB5-8FC9-6A8814B4621E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "User.CrossCutting.Ioc", "context\User\src\User.CrossCutting.Ioc\User.CrossCutting.Ioc.csproj", "{72F845EE-AEBC-46BC-A623-396248F74902}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +77,14 @@ Global
 		{95F19141-52F6-4CFE-82F5-766EAC661A22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95F19141-52F6-4CFE-82F5-766EAC661A22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95F19141-52F6-4CFE-82F5-766EAC661A22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C4F43FF-FCB6-4EB5-8FC9-6A8814B4621E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C4F43FF-FCB6-4EB5-8FC9-6A8814B4621E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C4F43FF-FCB6-4EB5-8FC9-6A8814B4621E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C4F43FF-FCB6-4EB5-8FC9-6A8814B4621E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72F845EE-AEBC-46BC-A623-396248F74902}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72F845EE-AEBC-46BC-A623-396248F74902}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72F845EE-AEBC-46BC-A623-396248F74902}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72F845EE-AEBC-46BC-A623-396248F74902}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -93,6 +105,8 @@ Global
 		{3E32A142-11DF-4366-BC12-51CC5CD973B1} = {39220A3E-ACF6-42CF-AA0E-52E3E783D75B}
 		{6DD6824A-FF83-4BE0-94FD-0B03AD34D4A9} = {39220A3E-ACF6-42CF-AA0E-52E3E783D75B}
 		{95F19141-52F6-4CFE-82F5-766EAC661A22} = {9F7E7686-7E42-4673-B969-70059D28F32B}
+		{5C4F43FF-FCB6-4EB5-8FC9-6A8814B4621E} = {5432C066-62C0-4D57-B11C-56EF1EA3F2B7}
+		{72F845EE-AEBC-46BC-A623-396248F74902} = {39220A3E-ACF6-42CF-AA0E-52E3E783D75B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		        SolutionGuid = {C95D0147-AA28-4854-9840-FEC8176100E1}

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\User.Core\User.Core.csproj" />
+    <ProjectReference Include="..\Product.Core\Product.Core.csproj" />
+    <ProjectReference Include="..\Product.Data.MySql\Product.Data.MySql.csproj" />
   </ItemGroup>
 
 </Project>

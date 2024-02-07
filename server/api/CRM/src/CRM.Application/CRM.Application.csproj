@@ -5,16 +5,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.11" />
-    <PackageReference Include="Npgsql" Version="7.0.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\context\Product\src\Product.Data.MySql\Product.Data.MySql.csproj" />
-    <ProjectReference Include="..\..\..\..\context\User\src\User.Core.Data.MySql\User.Data.MySql.csproj" />
+    <ProjectReference Include="..\..\..\..\context\Product\src\Product.CrossCutting.Ioc\Product.CrossCutting.Ioc.csproj" />
+    <ProjectReference Include="..\..\..\..\context\User\src\User.CrossCutting.Ioc\User.CrossCutting.Ioc.csproj" />
     <ProjectReference Include="..\CRM.Application.Common\CRM.Application.Common.csproj" />
   </ItemGroup>
 </Project>

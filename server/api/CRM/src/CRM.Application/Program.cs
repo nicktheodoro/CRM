@@ -2,18 +2,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using MyApp.Core.Users.Data.MySql.Contexts;
-using MyApp.Core.Users.Data.MySql.Repositories;
-using MyApp.Core.Users.Handlers;
-using MyApp.Core.Users.Interfaces;
-using MyApp.Core.Users.Mappers;
-using MyApp.Core.Users.Services;
-using Product.Core.Handlers;
-using Product.Core.Interfaces;
-using Product.Core.Mappers;
-using Product.Core.Services;
-using Product.Data.MySql.Contexts;
-using Product.Data.MySql.Repositories;
+using Product.CrossCutting.Ioc.DependencyInjection;
+using User.CrossCutting.Ioc.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,22 +46,10 @@ builder.Services.AddCors(options =>
                                                .AllowAnyMethod());
 });
 
-builder.Services.AddSingleton<ITokenService, TokenService>();
-builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(UserHandler).Assembly));
-builder.Services.AddMediatR(c => c.RegisterServicesFromAssembly(typeof(ProductHandler).Assembly));
-builder.Services.AddAutoMapper(typeof(UserMap));
-builder.Services.AddAutoMapper(typeof(ProductMap));
-
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<UserContext>(options => options.UseNpgsql(connection, b => b.MigrationsAssembly("User.Core")));
-builder.Services.AddDbContext<ProductContext>(options => options.UseNpgsql(connection, b => b.MigrationsAssembly("Product.Core")));
-
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<UserHandler>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<ProductService>();
-builder.Services.AddScoped<ProductHandler>();
+builder.Services.AddSingleton<ITokenService, TokenService>();
+ProductNativeInjectorBootStrapper.RegisterServices(builder.Services, connection);
+UserNativeInjectorBootStrapper.RegisterServices(builder.Services, connection);
 
 var app = builder.Build();
 
