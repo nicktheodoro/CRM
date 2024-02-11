@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using MyApp.SharedDomain.Messages;
 
-namespace Product.Core.Models.Product.Validators
+namespace Domain.Core.Test.Integration.Stubs.Models.Validators
 {
-    internal class ProductModelValidator : AbstractValidator<ProductModel>
+    public class ProductStubValidator : AbstractValidator<ProductStub>
     {
-        internal ProductModelValidator()
+        internal ProductStubValidator()
         {
             RuleFor(x => x.Name)
                 .NotEmpty()
