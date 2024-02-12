@@ -1,52 +1,55 @@
 ﻿using AutoMapper;
+using Domain.Core.Messages;
 using MyApp.SharedDomain.Commands;
 using MyApp.SharedDomain.Exceptions;
 using MyApp.SharedDomain.Exceptions.ValidacaoException;
 using MyApp.SharedDomain.Interfaces;
+using MyApp.SharedDomain.Messages;
 using MyApp.SharedDomain.Queries;
 using MyApp.SharedDomain.ValueObjects;
+using System.Net;
 
 namespace MyApp.SharedDomain.Services
 {
-    public class BaseService<TEntity> where TEntity : Entity
+    public class BaseService<TEntity>(IMapper mapper, IEFRepository<TEntity> repository) where TEntity : Entity
     {
-        protected readonly IMapper _mapper;
-        protected readonly IEFRepository<TEntity> _repository;
+        protected readonly IMapper _mapper = mapper;
+        protected readonly IEFRepository<TEntity> _repository = repository;
 
-        protected const string INVALID_ENTITY = "Invalid Entity";
-
-        protected BaseService(IMapper mapper, IEFRepository<TEntity> repository)
+        public virtual async Task<TEntity> GetEntityAsync(Guid id)
         {
-            _mapper = mapper;
-            _repository = repository;
+            return await _repository.GetAsync(id) ?? throw new NotFoundException(id);
         }
 
         public virtual async Task<TResponse> GetAsync<TResponse>(QueryBase<TResponse> query)
         {
-            var entity = await _repository.GetAsync(query.Id) ?? throw new NotFoundException(query.Id);
+            var entity = await GetEntityAsync(query.Id);
 
-            return _mapper.Map<TResponse>(entity);
-        }
+            var response = _mapper.Map<TResponse>(entity)
+                ?? throw new ExceptionBase(ErrorMessage.UnprocessableContent(), HttpStatusCode.UnprocessableContent);
 
-        public virtual async Task<TEntity> GetEntityByIdAsync(Guid id)
-        {
-            return await _repository.GetAsync(id) ?? throw new NotFoundException(id);
+            return response;
         }
 
         public virtual async Task<PaginateQueryResponseBase<TResponse>> GetAllAsync<TResponse>(PaginateQueryBase<TResponse> paginateQuery)
         {
             var pagination = new Pagination(paginateQuery.Page, paginateQuery.PageSize);
-            var teste = await _repository.GetAllAsync(pagination);
-            return _mapper.Map<PaginateQueryResponseBase<TResponse>>(teste);
+            var entities = await _repository.GetAllAsync(pagination);
+
+            var response = _mapper.Map<PaginateQueryResponseBase<TResponse>>(entities)
+                ?? throw new ExceptionBase(ErrorMessage.UnprocessableContent(), HttpStatusCode.UnprocessableContent);
+
+            return response;
         }
 
         public virtual async Task<CommandResponse> InsertAsync(InsertCommandBase command)
         {
-            var entity = _mapper.Map<TEntity>(command);
+            var entity = _mapper.Map<TEntity>(command)
+                ?? throw new ExceptionBase(ErrorMessage.UnprocessableContent(), HttpStatusCode.UnprocessableContent);
 
             if (!entity.Valid(out var validationResult))
             {
-                throw new ValidacaoException(INVALID_ENTITY, validationResult);
+                throw new ValidacaoException(ValidationMessage.InvalidEntity(), validationResult);
             }
 
             await _repository.InsertAsync(entity);
@@ -57,11 +60,12 @@ namespace MyApp.SharedDomain.Services
 
         public virtual async Task<CommandResponse> UpdateAsync(CommandBase command)
         {
-            var entity = _mapper.Map<TEntity>(command);
+            var entity = _mapper.Map<TEntity>(command)
+                ?? throw new ExceptionBase(ErrorMessage.UnprocessableContent(), HttpStatusCode.UnprocessableContent);
 
             if (!entity.Valid(out var validationResult))
             {
-                throw new ValidacaoException(INVALID_ENTITY, validationResult);
+                throw new ValidacaoException(ValidationMessage.InvalidEntity(), validationResult);
             }
 
             await _repository.UpdateAsync(entity);
@@ -72,7 +76,7 @@ namespace MyApp.SharedDomain.Services
 
         public virtual async Task<CommandResponse> DeleteAsync(CommandBase command)
         {
-            var entity = await GetEntityByIdAsync(command.Id);
+            var entity = await GetEntityAsync(command.Id);
 
             await _repository.Delete(entity);
             await _repository.SaveChangesAsync();

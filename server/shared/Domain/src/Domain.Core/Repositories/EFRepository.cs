@@ -11,7 +11,7 @@ namespace MyApp.SharedDomain.Repositories
         protected readonly DbContext _dbContext;
         protected readonly DbSet<TEntity> _dbSet;
 
-        protected EFRepository(DbContext dbContext)
+        public EFRepository(DbContext dbContext)
         {
             _dbContext = dbContext;
             _dbSet = _dbContext.Set<TEntity>();

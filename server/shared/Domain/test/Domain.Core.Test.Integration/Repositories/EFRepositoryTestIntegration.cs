@@ -1,5 +1,4 @@
 ﻿using Bogus;
-using Bogus.DataSets;
 using Domain.Core.Test.Integration.Abstractions;
 using Domain.Core.Test.Integration.Stubs.Contexts;
 using Domain.Core.Test.Integration.Stubs.Models;
@@ -17,7 +16,7 @@ namespace Domain.Core.Test.Integration.Repositories
 
         public EFRepositoryTestIntegration()
         {
-            _repository = new ProductStubEFRepository(context);
+            _repository = new ProductStubEFRepository(_context);
             _faker = new Faker();
         }
 
