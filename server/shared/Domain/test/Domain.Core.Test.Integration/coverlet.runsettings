@@ -1,8 +1,13 @@
-<!-- coverlet.runsettings -->
-<Project>
-  <PropertyGroup>
-    <CollectCoverage>true</CollectCoverage>
-    <CoverletOutputFormat>opencover</CoverletOutputFormat>
-    <CoverletOutput>./coverage.opencover.xml</CoverletOutput>
-  </PropertyGroup>
-</Project>
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0" assemblyQualifiedName="Microsoft.VisualStudio.TestPlatform.CodeCoverage.CoverageDataCollector, Microsoft.VisualStudio.TraceCollector, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+        <Configuration>
+          <Format>opencover</Format>
+          <UseVerifiableInstrumentation>True</UseVerifiableInstrumentation>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>
