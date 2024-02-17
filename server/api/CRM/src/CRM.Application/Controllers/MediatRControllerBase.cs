@@ -95,9 +95,9 @@ namespace MyApp.Application.Controllers
                     StatusCode = (int)statusCode
                 };
             }
-            catch (ValidacaoException ex)
+            catch (ValidationException ex)
             {
-                return new ObjectResult(ex.FormatedMessage)
+                return new ObjectResult(ex.FormattedMessage)
                 {
                     StatusCode = ex.StatusCode
                 };

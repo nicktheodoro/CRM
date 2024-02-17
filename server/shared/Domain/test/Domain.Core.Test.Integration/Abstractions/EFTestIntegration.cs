@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Domain.Core.Test.Integration.Stubs.Mappers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MyApp.SharedDomain.Exceptions;
 using MyApp.SharedDomain.Repositories;
@@ -8,13 +10,17 @@ namespace Domain.Core.Test.Integration.Abstractions
 {
     public abstract class EFTestIntegration<T> where T : EFContext, new()
     {
-        protected readonly DbContextOptionsBuilder<T> _dbBuilder;
         protected readonly T _context;
+        protected readonly DbContextOptionsBuilder<T> _dbBuilder;
+        protected readonly IMapper _mapper;
 
         public EFTestIntegration()
         {
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.test.json").Build();
             var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+            var config = new MapperConfiguration(cfg => cfg.AddProfile(typeof(ProductStubMap)));
+            _mapper = new Mapper(config);
 
             _dbBuilder = new DbContextOptionsBuilder<T>().UseNpgsql(connectionString);
 

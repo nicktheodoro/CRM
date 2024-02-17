@@ -36,7 +36,7 @@ namespace MyApp.Core.Users.Handlers
         {
             if (!request.Valid(out var validationResult))
             {
-                throw new ValidacaoException(INVALID_COMMAND, validationResult);
+                throw new ValidationException(INVALID_COMMAND, validationResult);
             }
 
             return await userService.InactiveUserAsync(request);
@@ -46,7 +46,7 @@ namespace MyApp.Core.Users.Handlers
         {
             if (!request.Valid(out var validationResult))
             {
-                throw new ValidacaoException(INVALID_COMMAND, validationResult);
+                throw new ValidationException(INVALID_COMMAND, validationResult);
             }
 
             return await userService.UpdatePasswordAsync(request);

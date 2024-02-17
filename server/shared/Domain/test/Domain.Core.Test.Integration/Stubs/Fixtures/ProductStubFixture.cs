@@ -31,9 +31,9 @@ namespace Domain.Core.Test.Integration.Stubs.Fixtures
             return stub;
         }
 
-        public static ProductStub GetProductStub()
+        public static ProductStubModel GetProductStub()
         {
-            var stub = new ProductStub()
+            var stub = new ProductStubModel()
             {
                 Name = _faker.Commerce.ProductName(),
                 Description = _faker.Commerce.ProductDescription(),
@@ -57,7 +57,7 @@ namespace Domain.Core.Test.Integration.Stubs.Fixtures
             return stub;
         }
 
-        public static UpdateProductStubCommand GetUpdateProductStubCommand(ProductStub entitty)
+        public static UpdateProductStubCommand GetUpdateProductStubCommand(ProductStubModel entitty)
         {
             var stub = new UpdateProductStubCommand()
             {
@@ -71,7 +71,7 @@ namespace Domain.Core.Test.Integration.Stubs.Fixtures
             return stub;
         }
 
-        public static DeleteProductStubCommand GetDeleteProductStubCommand(ProductStub entitty)
+        public static DeleteProductStubCommand GetDeleteProductStubCommand(ProductStubModel entitty)
         {
             var stub = new DeleteProductStubCommand()
             {

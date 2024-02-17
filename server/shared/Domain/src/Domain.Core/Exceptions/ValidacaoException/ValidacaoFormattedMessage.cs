@@ -1,13 +1,8 @@
 ﻿namespace MyApp.SharedDomain.Exceptions.ValidacaoException
 {
-    public class ValidacaoFormattedMessage
+    public class ValidacaoFormattedMessage(string message, IEnumerable<ValidacaoMessage> errors)
     {
-        public string Message { get; }
-        public IEnumerable<ValidacaoMessage> Errors { get; }
-        public ValidacaoFormattedMessage(string message, IEnumerable<ValidacaoMessage> errors)
-        {
-            Message = message;
-            Errors = errors;
-        }
+        public string Message { get; } = message;
+        public IEnumerable<ValidacaoMessage> Errors { get; } = errors;
     }
 }

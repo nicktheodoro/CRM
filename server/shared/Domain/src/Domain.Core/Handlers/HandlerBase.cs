@@ -13,7 +13,7 @@ namespace MyApp.SharedDomain.Handlers
         TGetPaginateQuery,
         TInsertCommand,
         TUpdateCommand,
-        TDeleteCommand>
+        TDeleteCommand>(BaseService<TEntity> service)
         where TEntity : Entity
         where TGetQuery : QueryBase<TGetResponse>
         where TGetPaginateQuery : PaginateQueryBase<TGetResponse>
@@ -22,21 +22,16 @@ namespace MyApp.SharedDomain.Handlers
         where TUpdateCommand : CommandBase
         where TDeleteCommand : CommandBase
     {
-        private readonly BaseService<TEntity> _service;
+        private readonly BaseService<TEntity> _service = service;
 
         protected const string INVALID_COMMAND = "Invalid command";
         protected const string INVALID_QUERY = "Invalid query";
-
-        public HandlerBase(BaseService<TEntity> service)
-        {
-            _service = service;
-        }
 
         public virtual async Task<PaginateQueryResponseBase<TGetResponse>> Handle(TGetPaginateQuery request, CancellationToken cancellationToken)
         {
             if (!request.Valid(out var validationResult))
             {
-                throw new ValidacaoException(INVALID_QUERY, validationResult);
+                throw new ValidationException(INVALID_QUERY, validationResult);
             }
 
             return await _service.GetAllAsync(request);
@@ -46,7 +41,7 @@ namespace MyApp.SharedDomain.Handlers
         {
             if (!request.Valid(out var validationResult))
             {
-                throw new ValidacaoException(INVALID_QUERY, validationResult);
+                throw new ValidationException(INVALID_QUERY, validationResult);
             }
 
             return await _service.GetAsync(request);
@@ -56,7 +51,7 @@ namespace MyApp.SharedDomain.Handlers
         {
             if (!request.Valid(out var validationResult))
             {
-                throw new ValidacaoException(INVALID_COMMAND, validationResult);
+                throw new ValidationException(INVALID_COMMAND, validationResult);
             }
 
             return await _service.InsertAsync(request);
@@ -66,7 +61,7 @@ namespace MyApp.SharedDomain.Handlers
         {
             if (!request.Valid(out var validationResult))
             {
-                throw new ValidacaoException(INVALID_COMMAND, validationResult);
+                throw new ValidationException(INVALID_COMMAND, validationResult);
             }
 
             return await _service.UpdateAsync(request);
@@ -76,7 +71,7 @@ namespace MyApp.SharedDomain.Handlers
         {
             if (!request.Valid(out var validationResult))
             {
-                throw new ValidacaoException(INVALID_COMMAND, validationResult);
+                throw new ValidationException(INVALID_COMMAND, validationResult);
             }
 
             return await _service.DeleteAsync(request);

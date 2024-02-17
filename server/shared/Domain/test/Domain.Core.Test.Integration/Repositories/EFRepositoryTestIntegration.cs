@@ -23,7 +23,7 @@ namespace Domain.Core.Test.Integration.Repositories
         [Fact]
         public async Task GetAsync_ShouldReturnEntity_WhenExists()
         {
-            var stub = new ProductStub()
+            var stub = new ProductStubModel()
             {
                 Name = _faker.Commerce.ProductName(),
                 Description = _faker.Commerce.ProductDescription(),
@@ -55,7 +55,7 @@ namespace Domain.Core.Test.Integration.Repositories
             const int pageSize = 2;
             for (int i = 0; i < 4; i++)
             {
-                var stub = new ProductStub()
+                var stub = new ProductStubModel()
                 {
                     Name = _faker.Commerce.ProductName(),
                     Description = _faker.Commerce.ProductDescription(),
@@ -78,7 +78,7 @@ namespace Domain.Core.Test.Integration.Repositories
         [Fact]
         public async Task InsertAsync_ShouldInsertEntity()
         {
-            var stub = new ProductStub()
+            var stub = new ProductStubModel()
             {
                 Name = _faker.Commerce.ProductName(),
                 Description = _faker.Commerce.ProductDescription(),
@@ -97,7 +97,7 @@ namespace Domain.Core.Test.Integration.Repositories
         [Fact]
         public async Task UpdateAsync_ShouldUpdateEntity()
         {
-            var stub = new ProductStub()
+            var stub = new ProductStubModel()
             {
                 Name = _faker.Commerce.ProductName(),
                 Description = _faker.Commerce.ProductDescription(),
@@ -120,7 +120,7 @@ namespace Domain.Core.Test.Integration.Repositories
         [Fact]
         public async Task Delete_ShouldDeleteEntity()
         {
-            var stub = new ProductStub()
+            var stub = new ProductStubModel()
             {
                 Name = _faker.Commerce.ProductName(),
                 Description = _faker.Commerce.ProductDescription(),

@@ -3,7 +3,7 @@ using MyApp.SharedDomain.Messages;
 
 namespace Domain.Core.Test.Integration.Stubs.Models.Validators
 {
-    public class ProductStubValidator : AbstractValidator<ProductStub>
+    public class ProductStubValidator : AbstractValidator<ProductStubModel>
     {
         internal ProductStubValidator()
         {

@@ -7,6 +7,10 @@ namespace Domain.Core.Test.Integration.Stubs.Contracts.Commands.Product.Validato
     {
         public UpdateProductStubCommandValidator()
         {
+            RuleFor(r => r.Id)
+               .NotEmpty()
+               .WithMessage(ValidationMessage.Required());
+
             RuleFor(r => r.Name)
                 .NotEmpty()
                 .WithMessage(ValidationMessage.Required());

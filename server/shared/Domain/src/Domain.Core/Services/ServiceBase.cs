@@ -49,7 +49,7 @@ namespace MyApp.SharedDomain.Services
 
             if (!entity.Valid(out var validationResult))
             {
-                throw new ValidacaoException(ValidationMessage.InvalidEntity(), validationResult);
+                throw new ValidationException(ValidationMessage.InvalidEntity(), validationResult);
             }
 
             await _repository.InsertAsync(entity);
@@ -65,7 +65,7 @@ namespace MyApp.SharedDomain.Services
 
             if (!entity.Valid(out var validationResult))
             {
-                throw new ValidacaoException(ValidationMessage.InvalidEntity(), validationResult);
+                throw new ValidationException(ValidationMessage.InvalidEntity(), validationResult);
             }
 
             await _repository.UpdateAsync(entity);

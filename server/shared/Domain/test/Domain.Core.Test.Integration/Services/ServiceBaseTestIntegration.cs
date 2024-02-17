@@ -15,14 +15,13 @@ namespace Domain.Core.Test.Integration.Services
 {
     public class ServiceBaseTestIntegration : EFTestIntegration<ProductStubContext>
     {
-        private readonly BaseService<ProductStub> _service;
+        private readonly BaseService<ProductStubModel> _service;
 
         public ServiceBaseTestIntegration()
         {
-            var config = new MapperConfiguration(cfg => cfg.AddProfile(typeof(ProductStubMap)));
-            var mapper = new Mapper(config);
+            
             var repository = new ProductStubEFRepository(_context);
-            _service = new BaseService<ProductStub>(mapper, repository);
+            _service = new BaseService<ProductStubModel>(_mapper, repository);
         }
 
         [Fact(DisplayName = "Dado o método GetAlAsync,  deve retornar uma coleção com sucesso")]
@@ -57,7 +56,7 @@ namespace Domain.Core.Test.Integration.Services
         {
             var command = ProductStubFixture.GetInvalidInsertCommandStub<InsertProductStubCommand>();
 
-            await Assert.ThrowsAsync<ValidacaoException>(async () => await _service.InsertAsync(command));
+            await Assert.ThrowsAsync<ValidationException>(async () => await _service.InsertAsync(command));
         }
 
         [Fact(DisplayName = "Dado o método InserirAsync, quando informado um command válido, deve inserir com sucesso")]
@@ -78,7 +77,7 @@ namespace Domain.Core.Test.Integration.Services
         {
             var entidade = ProductStubFixture.GetInvalidCommandStub<UpdateProductStubCommand>();
 
-            await Assert.ThrowsAsync<ValidacaoException>(async () => await _service.UpdateAsync(entidade));
+            await Assert.ThrowsAsync<ValidationException>(async () => await _service.UpdateAsync(entidade));
         }
 
         [Fact(DisplayName = "Dado o método AtualizarAsync, quando informado um command válido, deve inserir com sucesso")]

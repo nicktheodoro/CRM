@@ -7,10 +7,9 @@ namespace MyApp.SharedDomain.Queries
     {
         public QueryBaseValidator()
         {
-            // TODO: Thinking about how to implement this validation, improving the way to conceptualize the parameter.
-            //RuleFor(r => r.Param)
-            //    .NotEmpty()
-            //    .WithMessage(ValidationMessage.NotEmpty());
+            RuleFor(r => r.Id)
+                .NotEmpty()
+                .WithMessage(ValidationMessage.NotEmpty());
         }
     }
 }

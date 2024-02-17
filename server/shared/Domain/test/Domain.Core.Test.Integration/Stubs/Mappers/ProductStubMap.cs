@@ -17,14 +17,14 @@ namespace Domain.Core.Test.Integration.Stubs.Mappers
 
         private void DomainToResponse()
         {
-            CreateMap<ProductStub, GetProductStubResponse>();
-            CreateMap<PaginationResponse<ProductStub>, PaginateQueryResponseBase<GetProductStubResponse>>();
+            CreateMap<ProductStubModel, GetProductStubResponse>();
+            CreateMap<PaginationResponse<ProductStubModel>, PaginateQueryResponseBase<GetProductStubResponse>>();
         }
 
         private void CommandToDomain()
         {
-            CreateMap<InsertProductStubCommand, ProductStub>();
-            CreateMap<UpdateProductStubCommand, ProductStub>();
+            CreateMap<InsertProductStubCommand, ProductStubModel>();
+            CreateMap<UpdateProductStubCommand, ProductStubModel>();
         }
     }
 }

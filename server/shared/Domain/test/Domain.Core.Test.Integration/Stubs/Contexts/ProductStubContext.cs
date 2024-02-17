@@ -16,7 +16,7 @@ namespace Domain.Core.Test.Integration.Stubs.Contexts
         {
         }
 
-        public DbSet<ProductStub> Products { get; set; }
+        public DbSet<ProductStubModel> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
