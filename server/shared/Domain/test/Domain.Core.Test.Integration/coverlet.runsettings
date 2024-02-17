@@ -1,0 +1,8 @@
+<!-- coverlet.runsettings -->
+<Project>
+  <PropertyGroup>
+    <CollectCoverage>true</CollectCoverage>
+    <CoverletOutputFormat>opencover</CoverletOutputFormat>
+    <CoverletOutput>./coverage.opencover.xml</CoverletOutput>
+  </PropertyGroup>
+</Project>
