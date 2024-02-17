@@ -19,24 +19,29 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '6.x'
+        dotnet-version: '8.x'
 
     - name: Restore Dependencies
-      run: dotnet restore
+      run: |
+        cd server/shared/Domain/test/Domain.Core.Test.Integration
+        dotnet restore
 
     - name: Build Solution
-      run: dotnet build --configuration Release
+      run: |
+        cd server/shared/Domain/test/Domain.Core.Test.Integration
+        dotnet build --configuration Release
 
     - name: Install Dotnet reportgenerator
       run: dotnet tool install dotnet-reportgenerator-globaltool --tool-path tools
 
     - name: Run Tests with Code Coverage
       run: |
-        dotnet test --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-        ./tools/reportgenerator "-reports:${{ github.workspace }}/*/coverage.opencover.xml" "-targetdir:Reports_Coverage" -reportTypes:TextSummary
-        ./tools/reportgenerator "-reports:${{ github.workspace }}/*/coverage.opencover.xml" "-targetdir:Reports_Coverage" -reportTypes:Html
-        ls Reports_Coverage
-        cat Reports_Coverage/Summary.txt
+        cd server/shared/Domain/test/Domain.Core.Test.Integration
+        dotnet test --configuration Release --collect:"XPlat Code Coverage" --settings=./coverlet.runsettings
+        ../../../../tools/reportgenerator "-reports:coverage.opencover.xml" "-targetdir:../../../Reports_Coverage" -reportTypes:TextSummary
+        ../../../../tools/reportgenerator "-reports:coverage.opencover.xml" "-targetdir:../../../Reports_Coverage" -reportTypes:Html
+        ls ../../../Reports_Coverage
+        cat ../../../Reports_Coverage/Summary.txt
       continue-on-error: true
 
     - name: Upload Code Coverage Report
